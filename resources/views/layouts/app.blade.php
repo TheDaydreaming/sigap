@@ -76,7 +76,7 @@
             <a href="/dashboard" class="block p-2 hover:bg-gray-100">Dashboard</a>
             <a href="/devices/create" class="block p-2 hover:bg-gray-100">Input Data</a>
             <a href="/devices" class="block p-2 hover:bg-gray-100">Lihat Data</a>
-            <a href="/devices/qr-list" class="block p-2 hover:bg-gray-100">Generate QR</a>
+            <a href="/devices/qr" class="block p-2 hover:bg-gray-100">Generate QR</a>
         </div>
 
         <!-- ✅ KONTEN UTAMA -->
