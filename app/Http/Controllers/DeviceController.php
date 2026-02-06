@@ -4,23 +4,30 @@ namespace App\Http\Controllers;
 
 use App\Models\Device;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DeviceController extends Controller
 {
+    /**
+     * FORM INPUT PERANGKAT
+     */
     public function create()
     {
         return view('devices.create');
     }
 
+    /**
+     * SIMPAN DATA PERANGKAT
+     */
     public function store(Request $request)
     {
         $request->validate([
-            'nama_pemilik' => 'required',
-            'imei' => 'required',
-            'merek_hp' => 'required',
-            'warna_hp' => 'required',
-            'foto_pemilik' => 'required|image',
-            'foto_hp' => 'required|image',
+            'nama_pemilik' => 'required|string|max:255',
+            'imei' => 'required|string|max:255|unique:devices,imei',
+            'merek_hp' => 'required|string|max:255',
+            'warna_hp' => 'required|string|max:100',
+            'foto_pemilik' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'foto_hp' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $fotoPemilik = $request->file('foto_pemilik')->store('pemilik', 'public');
@@ -35,30 +42,47 @@ class DeviceController extends Controller
             'foto_hp' => $fotoHp,
         ]);
 
-        return redirect('/devices')->with('success', 'Data berhasil disimpan');
+        return redirect()
+            ->route('devices.index')
+            ->with('success', 'Data perangkat berhasil disimpan');
     }
 
+    /**
+     * HALAMAN DAFTAR PERANGKAT (ADMIN)
+     */
     public function index()
     {
         $devices = Device::latest()->get();
         return view('devices.index', compact('devices'));
     }
 
+    /**
+     * HALAMAN DAFTAR QR (ADMIN)
+     */
     public function qrList()
-{
-    $devices = Device::latest()->get();
-    return view('devices.qr-list', compact('devices'));
-}
+    {
+        $devices = Device::latest()->get();
+        return view('devices.qr-list', compact('devices'));
+    }
 
-public function qrShow(Device $device)
-{
-    return view('devices.qr-show', compact('device'));
-}
+    /**
+     * HALAMAN TAMPIL QR (ADMIN)
+     */
+    public function qrShow(Device $device)
+    {
+        return view('devices.qr-show', compact('device'));
+    }
 
-public function show(Device $device)
-{
-    return view('devices.show', compact('device'));
-}
+    /**
+     * DETAIL PERANGKAT (ADMIN - BUTUH LOGIN)
+     */
+    public function show(Device $device)
+    {
+        return view('devices.show', compact('device'));
+    }
 
-
+    public function publicShow(Device $device)
+    {
+        return view('devices.public-show', compact('device'));
+    }
 }

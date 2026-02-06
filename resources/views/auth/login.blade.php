@@ -1,96 +1,125 @@
-<x-guest-layout>
-<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGAP | Login</title>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="bg-gradient-to-br from-gray-100 to-indigo-50">
 
-    <div class="w-full max-w-md">
-        <div class="bg-white shadow-xl rounded-2xl p-8 border border-gray-100">
+<div class="min-h-screen flex items-center justify-center px-6">
 
-            <!-- LOGO / HEADER -->
-            <div class="text-center mb-6">
-                <div class="mx-auto w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center mb-3">
-                    <span class="text-white font-bold text-2xl">S</span>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-800">Selamat Datang</h2>
-                <p class="text-sm text-gray-500 mt-1">
-                    Silakan login untuk melanjutkan
+    <div class="w-full max-w-5xl grid lg:grid-cols-2 bg-white rounded-2xl shadow-xl overflow-hidden">
+
+        <!-- KIRI (Branding) -->
+        <div class="bg-indigo-600 flex flex-col justify-center p-12 text-white relative">
+
+            <div class="absolute top-6 left-6 text-sm opacity-70">
+                SIGAP • Inventaris Perangkat
+            </div>
+
+            <h1 class="text-5xl font-extrabold mb-4">SIGAP</h1>
+
+            <p class="text-lg opacity-90 leading-relaxed">
+                <span class="font-semibold">S</span>istem  
+                <span class="font-semibold">I</span>dentifikasi dan  
+                <span class="font-semibold">P</span>engawasan  
+                <span class="font-semibold">A</span>set  
+                <span class="font-semibold">P</span>erangkat.
+            </p>
+
+            <div class="mt-8 text-sm opacity-80">
+                Kelola, pantau, dan amankan perangkat secara terstruktur.
+            </div>
+        </div>
+
+        <!-- KANAN (Form Login) -->
+        <div class="flex items-center justify-center p-12 bg-white">
+            <div class="w-full max-w-md">
+
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">
+                    Masuk ke SIGAP
+                </h2>
+                <p class="text-gray-500 mb-6">
+                    Gunakan email dan password yang terdaftar.
                 </p>
+
+                <!-- Session Status -->
+                <x-auth-session-status class="mb-4" :status="session('status')" />
+
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
+
+                    <!-- Email -->
+                    <div>
+                        <x-input-label for="email" value="Email" />
+
+                        <x-text-input 
+                            id="email"
+                            class="block mt-1 w-full rounded-xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+                            type="email"
+                            name="email"
+                            required
+                            autofocus
+                            placeholder="nama@email.com"
+                        />
+
+                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mt-4">
+                        <x-input-label for="password" value="Password" />
+
+                        <x-text-input 
+                            id="password"
+                            class="block mt-1 w-full rounded-xl border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+                            type="password"
+                            name="password"
+                            required
+                            placeholder="••••••••"
+                        />
+
+                        <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                    </div>
+
+                    <!-- Remember & Forgot -->
+                    <div class="flex items-center justify-between mt-4">
+                        <label class="inline-flex items-center">
+                            <input 
+                                type="checkbox"
+                                name="remember"
+                                class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            >
+                            <span class="ms-2 text-sm text-gray-600">Ingat saya</span>
+                        </label>
+
+                        @if (Route::has('password.request'))
+                            <a href="{{ route('password.request') }}" 
+                               class="text-sm text-indigo-600 hover:underline">
+                                Lupa password?
+                            </a>
+                        @endif
+                    </div>
+
+                    <!-- Tombol Login -->
+                    <div class="mt-6">
+                        <x-primary-button 
+                            class="w-full justify-center py-3 rounded-xl text-lg bg-indigo-600 hover:bg-indigo-700 transition">
+                            Masuk
+                        </x-primary-button>
+                    </div>
+                </form>
+
+                <p class="text-center text-sm text-gray-500 mt-6">
+                    © {{ date('Y') }} SIGAP • Inventaris Perangkat
+                </p>
+
             </div>
-
-            <!-- Session Status -->
-            <x-auth-session-status class="mb-4" :status="session('status')" />
-
-            <form method="POST" action="{{ route('login') }}">
-                @csrf
-
-                <!-- Email Address -->
-                <div>
-                    <x-input-label for="email" :value="__('Email')" />
-                    <x-text-input 
-                        id="email"
-                        class="block mt-1 w-full rounded-lg"
-                        type="email"
-                        name="email"
-                        :value="old('email')"
-                        required
-                        autofocus
-                        autocomplete="username"
-                        placeholder="contoh@email.com"
-                    />
-                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
-                </div>
-
-                <!-- Password -->
-                <div class="mt-4">
-                    <x-input-label for="password" :value="__('Password')" />
-
-                    <x-text-input 
-                        id="password"
-                        class="block mt-1 w-full rounded-lg"
-                        type="password"
-                        name="password"
-                        required 
-                        autocomplete="current-password"
-                        placeholder="••••••••"
-                    />
-
-                    <x-input-error :messages="$errors->get('password')" class="mt-2" />
-                </div>
-
-                <!-- Remember Me -->
-                <div class="flex items-center justify-between mt-4">
-                    <label for="remember_me" class="inline-flex items-center">
-                        <input 
-                            id="remember_me" 
-                            type="checkbox" 
-                            class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" 
-                            name="remember"
-                        >
-                        <span class="ms-2 text-sm text-gray-600">Remember me</span>
-                    </label>
-
-                    @if (Route::has('password.request'))
-                        <a 
-                            class="text-sm text-indigo-600 hover:text-indigo-800"
-                            href="{{ route('password.request') }}"
-                        >
-                            Forgot password?
-                        </a>
-                    @endif
-                </div>
-
-                <!-- Login Button -->
-                <div class="mt-6">
-                    <x-primary-button class="w-full justify-center rounded-lg py-3">
-                        Log in
-                    </x-primary-button>
-                </div>
-            </form>
-
-            <div class="text-center text-sm text-gray-500 mt-6">
-                © {{ date('Y') }} SIGAP • Sistem Inventaris
-            </div>
-
         </div>
     </div>
-
 </div>
-</x-guest-layout>
+
+</body>
+</html>

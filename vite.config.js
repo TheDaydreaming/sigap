@@ -8,10 +8,4 @@ export default defineConfig({
             refresh: true,
         }),
     ],
-    server: {
-        hmr: {
-            host: 'sigap-production.up.railway.app',
-            protocol: 'wss',
-        },
-    },
 });
