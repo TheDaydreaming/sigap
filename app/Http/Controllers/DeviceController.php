@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Device;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
 
 class DeviceController extends Controller
 {
@@ -18,7 +17,7 @@ class DeviceController extends Controller
     }
 
     /**
-     * SIMPAN DATA PERANGKAT (DENGAN KOMPRES GAMBAR)
+     * SIMPAN DATA PERANGKAT
      */
     public function store(Request $request)
     {
@@ -31,40 +30,16 @@ class DeviceController extends Controller
             'foto_hp' => 'required|image|mimes:jpg,jpeg,png|max:5120',
         ]);
 
-        // ========== KOMPRES FOTO PEMILIK ==========
-        $fotoPemilik = $request->file('foto_pemilik');
-        $namaPemilik = 'pemilik_' . time() . '.jpg';
+        $fotoPemilik = $request->file('foto_pemilik')->store('pemilik', 'public');
+        $fotoHp = $request->file('foto_hp')->store('hp', 'public');
 
-        $imgPemilik = Image::make($fotoPemilik)
-            ->resize(1024, null, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            })
-            ->encode('jpg', 75); // kualitas 75%
-
-        Storage::disk('public')->put('pemilik/' . $namaPemilik, $imgPemilik);
-
-        // ========== KOMPRES FOTO HP ==========
-        $fotoHp = $request->file('foto_hp');
-        $namaHp = 'hp_' . time() . '.jpg';
-
-        $imgHp = Image::make($fotoHp)
-            ->resize(1024, null, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            })
-            ->encode('jpg', 75);
-
-        Storage::disk('public')->put('hp/' . $namaHp, $imgHp);
-
-        // ========== SIMPAN KE DATABASE ==========
         Device::create([
             'nama_pemilik' => $request->nama_pemilik,
             'imei' => $request->imei,
             'merek_hp' => $request->merek_hp,
             'warna_hp' => $request->warna_hp,
-            'foto_pemilik' => 'pemilik/' . $namaPemilik,
-            'foto_hp' => 'hp/' . $namaHp,
+            'foto_pemilik' => $fotoPemilik,
+            'foto_hp' => $fotoHp,
         ]);
 
         return redirect()
@@ -106,9 +81,6 @@ class DeviceController extends Controller
         return view('devices.show', compact('device'));
     }
 
-    /**
-     * HALAMAN PUBLIC (SCAN QR)
-     */
     public function publicShow(Device $device)
     {
         return view('devices.public-show', compact('device'));
