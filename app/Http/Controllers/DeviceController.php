@@ -26,8 +26,8 @@ class DeviceController extends Controller
             'imei' => 'required|string|max:255|unique:devices,imei',
             'merek_hp' => 'required|string|max:255',
             'warna_hp' => 'required|string|max:100',
-            'foto_pemilik' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'foto_hp' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+            'foto_pemilik' => 'required|image|mimes:jpg,jpeg,png|max:5120',
+            'foto_hp' => 'required|image|mimes:jpg,jpeg,png|max:5120',
         ]);
 
         $fotoPemilik = $request->file('foto_pemilik')->store('pemilik', 'public');
