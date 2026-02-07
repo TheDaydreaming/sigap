@@ -36,7 +36,7 @@ Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])
 */
 Route::middleware('auth')->group(function () {
 
-    // CRUD perangkat
+    // LIST & CREATE (taruh duluan)
     Route::get('/devices', [DeviceController::class, 'index'])
         ->name('devices.index');
 
@@ -46,24 +46,23 @@ Route::middleware('auth')->group(function () {
     Route::post('/devices', [DeviceController::class, 'store'])
         ->name('devices.store');
 
-    Route::get('/devices/{device}', [DeviceController::class, 'show'])
-        ->name('devices.show');
-
-    // QR untuk admin (halaman generate)
+    // ✅ QR ROUTES (HARUS DI ATAS /devices/{device})
     Route::get('/devices/qr', [DeviceController::class, 'qrList'])
         ->name('devices.qr.list');
 
     Route::get('/devices/qr/{device}', [DeviceController::class, 'qrShow'])
         ->name('devices.qr.show');
+
+    // ❗❗ DETAIL DEVICE (PALING BAWAH)
+    Route::get('/devices/{device}', [DeviceController::class, 'show'])
+        ->name('devices.show');
 });
 
 /*
 |--------------------------------------------------------------------------
 | DEVICE ROUTE (PUBLIC - HASIL SCAN QR)
 |--------------------------------------------------------------------------
-|
 | ➜ Bisa dibuka TANPA LOGIN dari Google Lens / Kamera
-|
 */
 Route::get('/public/devices/{device}', [DeviceController::class, 'publicShow'])
     ->name('devices.public.show');
