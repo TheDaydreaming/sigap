@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Device;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str; // ← PENTING untuk generate UUID
 
 class DeviceController extends Controller
 {
@@ -30,8 +31,12 @@ class DeviceController extends Controller
             'foto_hp' => 'required|image|mimes:jpg,jpeg,png|max:5120',
         ]);
 
+        // Simpan foto ke storage/public
         $fotoPemilik = $request->file('foto_pemilik')->store('pemilik', 'public');
         $fotoHp = $request->file('foto_hp')->store('hp', 'public');
+
+        // BUAT UUID MANUAL (BIAR RAILWAY TIDAK ERROR)
+        $uuid = (string) Str::uuid();
 
         Device::create([
             'nama_pemilik' => $request->nama_pemilik,
@@ -40,6 +45,7 @@ class DeviceController extends Controller
             'warna_hp' => $request->warna_hp,
             'foto_pemilik' => $fotoPemilik,
             'foto_hp' => $fotoHp,
+            'uuid' => $uuid, // ← PENTING!
         ]);
 
         return redirect()
