@@ -11,13 +11,13 @@ class Device extends Model
     use HasFactory;
 
     protected $fillable = [
-        'uuid',
         'nama_pemilik',
         'imei',
         'merek_hp',
         'warna_hp',
         'foto_pemilik',
         'foto_hp',
+        'uuid',
     ];
 
     protected static function boot()
