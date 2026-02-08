@@ -2,32 +2,24 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Device extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
+        'uuid',
         'nama_pemilik',
         'imei',
         'merek_hp',
         'warna_hp',
         'foto_pemilik',
         'foto_hp',
-        'uuid',
     ];
 
-    /**
-     * Pakai UUID sebagai route key (bukan ID)
-     */
-    public function getRouteKeyName()
-    {
-        return 'uuid';
-    }
-
-    /**
-     * Auto-generate UUID saat data dibuat
-     */
     protected static function boot()
     {
         parent::boot();
