@@ -10,7 +10,6 @@
 
 <div class="bg-white p-8 shadow-lg rounded-xl">
 
-    <!-- Judul & Deskripsi -->
     <div class="mb-6">
         <h3 class="text-lg font-semibold text-gray-800">
             Daftar Perangkat
@@ -20,7 +19,6 @@
         </p>
     </div>
 
-    <!-- Table Wrapper -->
     <div class="overflow-x-auto">
     <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">
         <thead class="bg-indigo-50">
@@ -51,11 +49,10 @@
             </td>
 
             <td class="px-4 py-3 text-center">
-                <a href="{{ route('devices.qr.show', $d->id) }}"
+                <a href="{{ route('devices.qr.show', $d->uuid) }}"
                    class="inline-flex items-center gap-2 bg-indigo-600 text-white 
                           px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
 
-                    <!-- Icon QR (opsional, biar cakep) -->
                     <svg xmlns="http://www.w3.org/2000/svg"
                          class="w-4 h-4"
                          viewBox="0 0 24 24"

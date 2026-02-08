@@ -81,6 +81,9 @@ class DeviceController extends Controller
         return view('devices.show', compact('device'));
     }
 
+    /**
+     * HALAMAN PUBLIC (HASIL SCAN QR)
+     */
     public function publicShow(Device $device)
     {
         return view('devices.public-show', compact('device'));

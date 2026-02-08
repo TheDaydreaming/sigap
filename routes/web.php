@@ -19,15 +19,15 @@ Route::get('/', function () {
 | DASHBOARD & TASK
 |--------------------------------------------------------------------------
 */
-Route::get('/dashboard', [TaskController::class, 'index'])
-    ->middleware(['auth'])
-    ->name('dashboard');
+Route::middleware('auth')->group(function () {
 
-Route::post('/tasks', [TaskController::class, 'store'])
-    ->middleware('auth');
+    Route::get('/dashboard', [TaskController::class, 'index'])
+        ->name('dashboard');
 
-Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])
-    ->middleware('auth');
+    Route::post('/tasks', [TaskController::class, 'store']);
+
+    Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -36,7 +36,7 @@ Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])
 */
 Route::middleware('auth')->group(function () {
 
-    // LIST & CREATE (taruh duluan)
+    // ===== LIST & CREATE (HARUS DI ATAS) =====
     Route::get('/devices', [DeviceController::class, 'index'])
         ->name('devices.index');
 
@@ -46,25 +46,24 @@ Route::middleware('auth')->group(function () {
     Route::post('/devices', [DeviceController::class, 'store'])
         ->name('devices.store');
 
-    // ✅ QR ROUTES (HARUS DI ATAS /devices/{device})
+    // ===== QR ROUTES (PAKAI UUID) =====
     Route::get('/devices/qr', [DeviceController::class, 'qrList'])
         ->name('devices.qr.list');
 
-    Route::get('/devices/qr/{device}', [DeviceController::class, 'qrShow'])
+    Route::get('/devices/qr/{device:uuid}', [DeviceController::class, 'qrShow'])
         ->name('devices.qr.show');
 
-    // ❗❗ DETAIL DEVICE (PALING BAWAH)
-    Route::get('/devices/{device}', [DeviceController::class, 'show'])
+    // ===== DETAIL DEVICE (PALING BAWAH, PAKAI UUID) =====
+    Route::get('/devices/{device:uuid}', [DeviceController::class, 'show'])
         ->name('devices.show');
 });
 
 /*
 |--------------------------------------------------------------------------
-| DEVICE ROUTE (PUBLIC - HASIL SCAN QR)
+| DEVICE ROUTE (PUBLIC - HASIL SCAN QR) — PAKAI UUID
 |--------------------------------------------------------------------------
-| ➜ Bisa dibuka TANPA LOGIN dari Google Lens / Kamera
 */
-Route::get('/public/devices/{device}', [DeviceController::class, 'publicShow'])
+Route::get('/public/devices/{device:uuid}', [DeviceController::class, 'publicShow'])
     ->name('devices.public.show');
 
 /*

@@ -24,9 +24,9 @@
     <div class="bg-gray-50 border rounded-xl p-6 text-center">
         <div class="inline-block bg-white p-4 rounded-lg shadow-sm mb-4">
             {!! QrCode::size(320)
-                ->margin(2)
-                ->errorCorrection('H')
-                ->generate(route('devices.public.show', $device->id)) !!}
+    ->margin(2)
+    ->errorCorrection('H')
+    ->generate(url('/public/devices/' . $device->uuid)) !!}
         </div>
 
         <p class="text-gray-600 text-sm">
@@ -36,18 +36,10 @@
 
     <!-- ACTION -->
     <div class="mt-6 flex justify-between items-center">
-        <a href="/devices/qr"
+        <a href="{{ route('devices.qr.list') }}"
             class="text-indigo-600 hover:underline text-sm">
             ← Kembali ke daftar
         </a>
-
-        <!-- (Opsional) Kalau nanti mau fitur download -->
-        {{-- 
-        <a href="{{ route('devices.qr.download', $device->id) }}"
-           class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700">
-            Download QR
-        </a>
-        --}}
     </div>
 
 </div>
