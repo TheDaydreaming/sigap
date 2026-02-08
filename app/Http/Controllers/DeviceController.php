@@ -4,21 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Device;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class DeviceController extends Controller
 {
-    /**
-     * FORM INPUT PERANGKAT
-     */
     public function create()
     {
         return view('devices.create');
     }
 
-    /**
-     * SIMPAN DATA PERANGKAT
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -47,43 +40,28 @@ class DeviceController extends Controller
             ->with('success', 'Data perangkat berhasil disimpan');
     }
 
-    /**
-     * HALAMAN DAFTAR PERANGKAT (ADMIN)
-     */
     public function index()
     {
         $devices = Device::latest()->get();
         return view('devices.index', compact('devices'));
     }
 
-    /**
-     * HALAMAN DAFTAR QR (ADMIN)
-     */
     public function qrList()
     {
         $devices = Device::latest()->get();
         return view('devices.qr-list', compact('devices'));
     }
 
-    /**
-     * HALAMAN TAMPIL QR (ADMIN)
-     */
     public function qrShow(Device $device)
     {
         return view('devices.qr-show', compact('device'));
     }
 
-    /**
-     * DETAIL PERANGKAT (ADMIN - BUTUH LOGIN)
-     */
     public function show(Device $device)
     {
         return view('devices.show', compact('device'));
     }
 
-    /**
-     * HALAMAN PUBLIC (HASIL SCAN QR)
-     */
     public function publicShow(Device $device)
     {
         return view('devices.public-show', compact('device'));
