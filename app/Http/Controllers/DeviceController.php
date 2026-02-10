@@ -35,6 +35,10 @@ class DeviceController extends Controller
         $fotoPemilik = $request->file('foto_pemilik')->store('pemilik', 'public');
         $fotoHp = $request->file('foto_hp')->store('hp', 'public');
 
+        // PASTIKAN file benar-benar bisa diakses publik
+        Storage::disk('public')->setVisibility($fotoPemilik, 'public');
+        Storage::disk('public')->setVisibility($fotoHp, 'public');
+
         // BUAT UUID MANUAL (BIAR RAILWAY TIDAK ERROR)
         $uuid = (string) Str::uuid();
 
