@@ -42,15 +42,29 @@
 <td class="px-4 py-3 text-sm text-gray-800">{{ $d->warna_hp }}</td>
 
 <td class="px-4 py-3">
-<img 
-src="{{ asset('storage/'.$d->foto_pemilik) }}" 
-class="w-20 h-20 object-cover rounded-xl shadow-sm border">
+@if($d->foto_pemilik && \Illuminate\Support\Facades\Storage::disk('public')->exists($d->foto_pemilik))
+    <img 
+        src="{{ asset('storage/'.$d->foto_pemilik) }}" 
+        class="w-20 h-20 object-cover rounded-xl shadow-sm border"
+        alt="Foto Pemilik">
+@else
+    <div class="w-20 h-20 flex items-center justify-center bg-gray-100 border rounded-xl text-xs text-gray-400">
+        Tidak ada foto
+    </div>
+@endif
 </td>
 
 <td class="px-4 py-3">
-<img 
-src="{{ asset('storage/'.$d->foto_hp) }}" 
-class="w-20 h-20 object-cover rounded-xl shadow-sm border">
+@if($d->foto_hp && \Illuminate\Support\Facades\Storage::disk('public')->exists($d->foto_hp))
+    <img 
+        src="{{ asset('storage/'.$d->foto_hp) }}" 
+        class="w-20 h-20 object-cover rounded-xl shadow-sm border"
+        alt="Foto HP">
+@else
+    <div class="w-20 h-20 flex items-center justify-center bg-gray-100 border rounded-xl text-xs text-gray-400">
+        Tidak ada foto
+    </div>
+@endif
 </td>
 </tr>
 @empty
