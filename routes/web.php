@@ -25,7 +25,6 @@ Route::middleware('auth')->group(function () {
         ->name('dashboard');
 
     Route::post('/tasks', [TaskController::class, 'store']);
-
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
 });
 
@@ -36,7 +35,7 @@ Route::middleware('auth')->group(function () {
 */
 Route::middleware('auth')->group(function () {
 
-    // ===== LIST & CREATE (HARUS DI ATAS) =====
+    // ===== LIST & CREATE =====
     Route::get('/devices', [DeviceController::class, 'index'])
         ->name('devices.index');
 
@@ -46,6 +45,18 @@ Route::middleware('auth')->group(function () {
     Route::post('/devices', [DeviceController::class, 'store'])
         ->name('devices.store');
 
+    // ===== DATA UNTUK DATATABLES (AJAX) =====
+    Route::get('/devices-datatable', [DeviceController::class, 'datatable'])
+        ->name('devices.datatable');
+
+    // ===== UPDATE (EDIT DARI MODAL) =====
+    Route::put('/devices/{device}', [DeviceController::class, 'update'])
+        ->name('devices.update');
+
+    // ===== JSON UNTUK MODAL (DETAIL & EDIT) — pakai UUID =====
+    Route::get('/devices/{device:uuid}/json', [DeviceController::class, 'json'])
+        ->name('devices.json');
+
     // ===== QR ROUTES (PAKAI UUID) =====
     Route::get('/devices/qr', [DeviceController::class, 'qrList'])
         ->name('devices.qr.list');
@@ -53,14 +64,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/devices/qr/{device:uuid}', [DeviceController::class, 'qrShow'])
         ->name('devices.qr.show');
 
-    // ===== DETAIL DEVICE (PALING BAWAH, PAKAI UUID) =====
-    Route::get('/devices/{device:uuid}', [DeviceController::class, 'show'])
-        ->name('devices.show');
+    // ===== DELETE (AJAX) =====
+    Route::delete('/devices/{id}', [DeviceController::class, 'destroy'])
+        ->name('devices.destroy');
 });
 
 /*
 |--------------------------------------------------------------------------
-| DEVICE ROUTE (PUBLIC - HASIL SCAN QR) — PAKAI UUID
+| DEVICE ROUTE (PUBLIC - HASIL SCAN QR)
 |--------------------------------------------------------------------------
 */
 Route::get('/public/devices/{device:uuid}', [DeviceController::class, 'publicShow'])

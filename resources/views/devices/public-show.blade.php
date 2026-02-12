@@ -8,84 +8,118 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100">
+<body style="background:#E0E2E3;">
 
 <div class="min-h-screen flex items-center justify-center px-4 py-10">
 
-    <div class="bg-white shadow-xl rounded-2xl max-w-3xl w-full overflow-hidden">
+<div class="max-w-4xl w-full">
 
-        <!-- HEADER -->
-        <div class="bg-indigo-600 text-white p-6 text-center">
-            <h1 class="text-2xl font-bold">SIGAP</h1>
-            <p class="text-indigo-100 text-sm mt-1">
-                Sistem Identifikasi dan Pengawasan Handphone
-            </p>
-        </div>
+<!-- ====== DECORATIVE ACCENT LINE ====== -->
+<div class="h-1 w-24 mx-auto rounded-full mb-4" style="background:#EEBF63;"></div>
 
-        <div class="p-6 md:p-8 grid md:grid-cols-2 gap-6">
+<div class="bg-white shadow-xl rounded-3xl overflow-hidden border" style="border-color:#E0E2E3;">
 
-            <!-- FOTO PEMILIK -->
-            <div class="text-center">
-                <p class="text-gray-500 text-sm mb-2">Foto Pemilik</p>
-                <img 
-                    src="{{ asset('storage/'.$device->foto_pemilik) }}" 
-                    class="mx-auto rounded-xl shadow-md w-56 h-56 object-cover"
-                >
-            </div>
+<!-- ====== HEADER ====== -->
+<div class="text-white p-7 text-center relative overflow-hidden"
+     style="background:#07213D;">
 
-            <!-- FOTO HP -->
-            <div class="text-center">
-                <p class="text-gray-500 text-sm mb-2">Foto Perangkat</p>
-                <img 
-                    src="{{ asset('storage/'.$device->foto_hp) }}" 
-                    class="mx-auto rounded-xl shadow-md w-56 h-56 object-cover"
-                >
-            </div>
-        </div>
-
-        <div class="px-6 md:px-8 pb-8">
-
-            <div class="bg-gray-50 p-5 rounded-xl border border-gray-200">
-                <h2 class="text-lg font-semibold text-gray-800 mb-3">
-                    Detail Perangkat
-                </h2>
-
-                <div class="space-y-2 text-gray-700">
-                    <p>
-                        <span class="font-semibold">Nama Pemilik:</span>
-                        {{ $device->nama_pemilik }}
-                    </p>
-
-                    <p>
-                        <span class="font-semibold">IMEI:</span>
-                        {{ $device->imei }}
-                    </p>
-
-                    <p>
-                        <span class="font-semibold">Merek HP:</span>
-                        {{ $device->merek_hp }}
-                    </p>
-
-                    <p>
-                        <span class="font-semibold">Warna HP:</span>
-                        {{ $device->warna_hp }}
-                    </p>
-                </div>
-            </div>
-
-            <div class="mt-6 text-center">
-                <p class="text-sm text-gray-500">
-                    Data ini ditampilkan melalui sistem <strong>SIGAP</strong>.
-                </p>
-            </div>
-
-        </div>
-
-        <div class="bg-gray-100 text-center p-4 text-xs text-gray-500">
-            © {{ date('Y') }} SIGAP • Inventaris Perangkat
-        </div>
-
+    <!-- soft gold glow -->
+    <div class="absolute -top-10 -right-10 w-40 h-40 rounded-full opacity-10"
+         style="background:#EEBF63; filter: blur(50px);">
     </div>
+
+    <h1 class="text-3xl font-bold tracking-wide relative">
+        SIGAP
+    </h1>
+    <p class="text-sm mt-1 opacity-80 relative">
+        Sistem Identifikasi dan Pengawasan Handphone
+    </p>
+</div>
+
+<!-- ====== FOTO AREA ====== -->
+<div class="p-6 md:p-8 grid md:grid-cols-2 gap-8 bg-white">
+
+    <!-- FOTO PEMILIK -->
+    <div class="text-center">
+        <p class="text-sm font-medium mb-3" style="color:#07213D;">
+            Foto Pemilik
+        </p>
+        <div class="inline-block p-2 rounded-2xl shadow-md"
+             style="background:#E0E2E3;">
+            <img 
+                src="{{ asset('storage/'.$device->foto_pemilik) }}" 
+                class="rounded-xl w-56 h-56 object-cover shadow"
+            >
+        </div>
+    </div>
+
+    <!-- FOTO HP -->
+    <div class="text-center">
+        <p class="text-sm font-medium mb-3" style="color:#07213D;">
+            Foto Perangkat
+        </p>
+        <div class="inline-block p-2 rounded-2xl shadow-md"
+             style="background:#E0E2E3;">
+            <img 
+                src="{{ asset('storage/'.$device->foto_hp) }}" 
+                class="rounded-xl w-56 h-56 object-cover shadow"
+            >
+        </div>
+    </div>
+</div>
+
+<!-- ====== DETAIL CARD ====== -->
+<div class="px-6 md:px-8 pb-8">
+
+<div class="rounded-2xl p-6 border shadow-sm"
+     style="background:#E0E2E3; border-color:#E0E2E3;">
+
+    <div class="flex items-center gap-2 mb-4">
+        <div class="h-1 w-10 rounded-full" style="background:#EEBF63;"></div>
+        <h2 class="text-lg font-semibold" style="color:#07213D;">
+            Detail Perangkat
+        </h2>
+    </div>
+
+    <div class="grid sm:grid-cols-2 gap-3 text-sm" style="color:#07213D;">
+        <p>
+            <span class="font-semibold">Nama Pemilik:</span><br>
+            {{ $device->nama_pemilik }}
+        </p>
+
+        <p>
+            <span class="font-semibold">IMEI:</span><br>
+            {{ $device->imei }}
+        </p>
+
+        <p>
+            <span class="font-semibold">Merek HP:</span><br>
+            {{ $device->merek_hp }}
+        </p>
+
+        <p>
+            <span class="font-semibold">Warna HP:</span><br>
+            {{ $device->warna_hp }}
+        </p>
+    </div>
+</div>
+
+<div class="mt-6 text-center">
+    <p class="text-sm" style="color:#07213D; opacity:0.8;">
+        Data ini ditampilkan melalui sistem <strong>SIGAP</strong>.
+    </p>
+</div>
+
+</div>
+
+<!-- ====== FOOTER ====== -->
+<div class="text-center p-4 text-xs border-t"
+     style="background:#E0E2E3; color:#07213D; border-color:#E0E2E3;">
+    © {{ date('Y') }} SIGAP • Inventaris Perangkat
+</div>
+
+</div>
+</div>
 </div>
 
 </body>

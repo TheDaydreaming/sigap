@@ -1,82 +1,110 @@
 <x-app-layout>
 <x-slot name="header">
-    <h2 class="font-semibold text-xl text-gray-800">
+    <h2 class="font-semibold text-xl" style="color:#07213D;">
         Generate QR Code Perangkat
     </h2>
 </x-slot>
 
-<div class="py-12 bg-gray-50">
-<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+<div class="py-10" style="background:#E0E2E3;">
+<div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
-<div class="bg-white p-8 shadow-lg rounded-xl">
+<!-- HEADER + SEARCH -->
+<div class="p-6 rounded-2xl shadow-sm border flex flex-wrap gap-4 items-center justify-between"
+     style="background:#FFFFFF; border-color:#E0E2E3;">
 
-    <div class="mb-6">
-        <h3 class="text-lg font-semibold text-gray-800">
+    <div>
+        <h3 class="text-lg font-semibold" style="color:#07213D;">
             Daftar Perangkat
         </h3>
-        <p class="text-sm text-gray-500">
-            Pilih perangkat untuk membuat QR Code.
+        <p class="text-sm mt-1 text-gray-500">
+            Cari perangkat atau buat QR Code.
         </p>
     </div>
 
-    <div class="overflow-x-auto">
-    <table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">
-        <thead class="bg-indigo-50">
-        <tr>
-            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">
-                Nama Pemilik
-            </th>
-            <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">
-                IMEI
-            </th>
-            <th class="px-4 py-3 text-center text-sm font-semibold text-gray-700">
-                Aksi
-            </th>
-        </tr>
-        </thead>
+    <input 
+        type="text"
+        id="searchInput"
+        placeholder="Cari nama / IMEI..."
+        value="{{ request('search') }}"
+        class="rounded-xl border-gray-300 focus:ring-[#EEBF63]"
+    >
+</div>
 
-        <tbody class="divide-y">
-        @foreach($devices as $d)
-        <tr class="hover:bg-gray-50 transition">
-            <td class="px-4 py-3">
-                <div class="font-medium text-gray-800">
-                    {{ $d->nama_pemilik }}
-                </div>
-            </td>
+<!-- TABLE -->
+<div class="rounded-2xl shadow-sm border overflow-hidden"
+     style="background:#FFFFFF; border-color:#E0E2E3;">
 
-            <td class="px-4 py-3 font-mono text-sm text-gray-700">
-                {{ $d->imei }}
-            </td>
+<div class="overflow-x-auto">
+<table class="min-w-full">
+<thead style="background:#07213D;">
+<tr>
+    <th class="px-6 py-4 text-left text-sm font-semibold text-white">Nama Pemilik</th>
+    <th class="px-6 py-4 text-left text-sm font-semibold text-white">IMEI</th>
+    <th class="px-6 py-4 text-center text-sm font-semibold text-white">Aksi</th>
+</tr>
+</thead>
 
-            <td class="px-4 py-3 text-center">
-                <a href="{{ route('devices.qr.show', $d->uuid) }}"
-                   class="inline-flex items-center gap-2 bg-indigo-600 text-white 
-                          px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+<tbody style="background:#FFFFFF;">
+@forelse($devices as $d)
+<tr class="hover:bg-gray-50 transition-all duration-150"
+    style="border-bottom:1px solid #E0E2E3;">
 
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         class="w-4 h-4"
-                         viewBox="0 0 24 24"
-                         fill="none"
-                         stroke="currentColor"
-                         stroke-width="2"
-                         stroke-linecap="round"
-                         stroke-linejoin="round">
-                        <rect x="3" y="3" width="7" height="7"/>
-                        <rect x="14" y="3" width="7" height="7"/>
-                        <rect x="14" y="14" width="7" height="7"/>
-                        <rect x="3" y="14" width="7" height="7"/>
-                    </svg>
+<td class="px-6 py-4 font-medium" style="color:#07213D;">
+    {{ $d->nama_pemilik }}
+</td>
 
-                    <span>Buat QR</span>
-                </a>
-            </td>
-        </tr>
-        @endforeach
-        </tbody>
-    </table>
-    </div>
+<td class="px-6 py-4 font-mono text-sm" style="color:#07213D;">
+    {{ $d->imei }}
+</td>
+
+<td class="px-6 py-4 text-center">
+<a href="{{ route('devices.qr.show', $d->uuid) }}"
+   class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl transition shadow-sm hover:shadow-md"
+   style="background:#07213D; color:#FFFFFF;">
+    Buat QR
+</a>
+</td>
+</tr>
+@empty
+<tr>
+<td colspan="3" class="text-center py-10 text-gray-500">
+    Tidak ada data ditemukan.
+</td>
+</tr>
+@endforelse
+</tbody>
+</table>
+</div>
+
+<!-- PAGINATION -->
+<div class="px-6 py-4">
+{{ $devices->appends(request()->query())->links('pagination::tailwind') }}
+</div>
 
 </div>
 </div>
 </div>
+
+<script>
+/* LIVE SEARCH (tetap ada) */
+const searchInput = document.getElementById("searchInput");
+let timeout = null;
+
+searchInput.addEventListener("input", function() {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+        const url = new URL(window.location.href);
+
+        if (this.value.trim() === "") {
+            url.searchParams.delete("search");
+        } else {
+            url.searchParams.set("search", this.value);
+        }
+
+        url.searchParams.set("page", 1);
+        window.location.href = url.toString();
+    }, 400);
+});
+</script>
+
 </x-app-layout>
