@@ -3,33 +3,40 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 return new class extends Migration {
     public function up()
     {
-        // 1) Tambah kolom UUID (boleh null dulu)
-        Schema::table('devices', function (Blueprint $table) {
-            $table->uuid('uuid')->nullable()->after('id');
-        });
+        // 1️⃣ Tambah kolom jika belum ada
+        if (!Schema::hasColumn('devices', 'uuid')) {
 
-        // 2) Isi UUID untuk semua data lama
-        DB::table('devices')->get()->each(function ($device) {
-            DB::table('devices')
-                ->where('id', $device->id)
-                ->update(['uuid' => (string) Str::uuid()]);
-        });
+            Schema::table('devices', function (Blueprint $table) {
+                $table->uuid('uuid')->nullable()->after('id');
+            });
 
-        // 3) Baru jadikan UNIQUE
-        Schema::table('devices', function (Blueprint $table) {
-            $table->unique('uuid');
-        });
+            // 2️⃣ Isi UUID untuk data lama
+            DB::table('devices')->whereNull('uuid')->get()->each(function ($device) {
+                DB::table('devices')
+                    ->where('id', $device->id)
+                    ->update(['uuid' => (string) Str::uuid()]);
+            });
+
+            // 3️⃣ Tambahkan unique index
+            Schema::table('devices', function (Blueprint $table) {
+                $table->unique('uuid');
+            });
+        }
     }
 
     public function down()
     {
-        Schema::table('devices', function (Blueprint $table) {
-            $table->dropColumn('uuid');
-        });
+        if (Schema::hasColumn('devices', 'uuid')) {
+            Schema::table('devices', function (Blueprint $table) {
+                $table->dropUnique(['uuid']);
+                $table->dropColumn('uuid');
+            });
+        }
     }
 };
