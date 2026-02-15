@@ -25,17 +25,54 @@
 
                 <div class="p-8 space-y-6">
 
-                    <!-- ALERT VALIDASI (HIDDEN DEFAULT) -->
-                    <div id="validationAlert" class="hidden p-4 rounded-xl border-l-4" style="background:#FFF7E6; border-color:#EEBF63; color:#07213D;">
-                        Mohon lengkapi semua data dengan benar sebelum melanjutkan.
-                    </div>
+                    <!-- ALERT VALIDASI -->
+<div id="validationAlert"
+     class="hidden relative flex items-start gap-3 p-4 rounded-xl 
+            border border-red-200 bg-red-50 text-red-700 
+            shadow-sm transition-all duration-300">
+
+    <!-- ICON -->
+    <div class="flex-shrink-0 w-8 h-8 flex items-center justify-center 
+                rounded-full bg-red-100">
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             class="h-5 w-5 text-red-600" 
+             fill="none" 
+             viewBox="0 0 24 24" 
+             stroke="currentColor">
+            <path stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="2"
+                  d="M12 9v2m0 4h.01M5.455 19h13.09c1.54 0 
+                     2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 
+                     0L3.723 16c-.77 1.333.192 3 1.732 3z" />
+        </svg>
+    </div>
+
+    <!-- TEXT -->
+    <div class="flex-1">
+        <p class="font-semibold">
+            Terjadi Kesalahan
+        </p>
+        <p class="text-sm">
+            Mohon lengkapi semua data dengan benar sebelum melanjutkan.
+        </p>
+    </div>
+
+    <!-- CLOSE BUTTON -->
+    <button type="button"
+            onclick="closeValidationAlert()"
+            class="absolute top-2 right-2 text-red-500 hover:text-red-700 transition">
+        ✕
+    </button>
+</div>
+
 
                     <!-- SECTION: DATA PEMILIK -->
                     <div>
                         <h4 class="font-semibold mb-3" style="color:#07213D;">
                             Data Pemilik
                         </h4>
-                        <div class="h-1 w-16 rounded-full mb-4" style="background:#EEBF63;"></div>
+                        <div class="h-1 w-20 rounded-full mb-4" style="background:#EEBF63;"></div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -75,7 +112,7 @@
                         <h4 class="font-semibold mb-3" style="color:#07213D;">
                             Data Perangkat
                         </h4>
-                        <div class="h-1 w-16 rounded-full mb-4" style="background:#EEBF63;"></div>
+                        <div class="h-1 w-20 rounded-full mb-4" style="background:#EEBF63;"></div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
@@ -276,6 +313,32 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
+let alertTimeout;
+
+function showValidationAlert() {
+    const alertBox = document.getElementById("validationAlert");
+
+    alertBox.classList.remove("hidden");
+    alertBox.classList.add("shake-soft", "opacity-100");
+
+    // Hapus class shake setelah selesai animasi
+    setTimeout(() => {
+        alertBox.classList.remove("shake-soft");
+    }, 400);
+
+    // Auto hide setelah 5 detik
+    clearTimeout(alertTimeout);
+    alertTimeout = setTimeout(() => {
+        closeValidationAlert();
+    }, 5000);
+}
+
+window.closeValidationAlert = function() {
+    const alertBox = document.getElementById("validationAlert");
+    alertBox.classList.add("hidden");
+}
+
+
     // ✅ TOMBOL SIMPAN -> TAMPILKAN MODAL KONFIRMASI
     confirmBtn.addEventListener("click", function(e) {
         e.preventDefault();
@@ -289,12 +352,13 @@ document.addEventListener("DOMContentLoaded", function() {
         });
 
         if (!valid) {
-            validationAlert.classList.remove("hidden");
+showValidationAlert();
             return;
         }
 
         validationAlert.classList.add("hidden");
         confirmModal.classList.remove("hidden");
+        lockScroll();
     });
 
     // ✅ TUTUP MODAL KONFIRMASI
@@ -305,6 +369,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // ✅ YA, SIMPAN (TAMPIL LOADING)
     window.submitForm = function() {
         confirmModal.classList.add("hidden");
+        unlockScroll();
         confirmBtn.classList.add("hidden");
         loadingBtn.classList.remove("hidden");
 
@@ -316,12 +381,22 @@ document.addEventListener("DOMContentLoaded", function() {
     // ✅ TAMPIL MODAL SUKSES JIKA ADA SESSION SUCCESS
     @if(session('success'))
         successModal.classList.remove("hidden");
+        lockScroll();
     @endif
 
     // ✅ TUTUP MODAL SUKSES
     window.closeSuccess = function() {
         successModal.classList.add("hidden");
+        unlockScroll();
     };
+
+    function lockScroll() {
+    document.body.classList.add("overflow-hidden");
+}
+
+function unlockScroll() {
+    document.body.classList.remove("overflow-hidden");
+}
 
 });
 </script>

@@ -13,6 +13,9 @@
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <style>
+    [x-cloak] { display: none !important; }
+</style>
 </head>
 <body class="font-sans antialiased bg-[#E0E2E3]">
 
@@ -65,6 +68,7 @@
 
     <!-- DROPDOWN -->
     <div x-show="open"
+        x-cloak
          x-transition:enter="transition ease-out duration-200"
          x-transition:enter-start="opacity-0 scale-95 translate-y-2"
          x-transition:enter-end="opacity-100 scale-100 translate-y-0"
@@ -138,14 +142,30 @@
         </h3>
 
         <button @click="sidebarOpen = !sidebarOpen"
-                class="p-1.5 rounded-lg hover:bg-[#0A2F52] transition">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 class="h-5 w-5 text-[#EEBF63]"
-                 fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
-            </svg>
-        </button>
+        class="group relative w-10 h-10 flex items-center justify-center
+               rounded-xl bg-[#0A2F52]
+               hover:bg-[#EEBF63]/15
+               transition-all duration-300
+               shadow-md hover:shadow-lg">
+
+    <!-- Icon Double Chevron -->
+    <svg xmlns="http://www.w3.org/2000/svg"
+         class="h-6 w-6 text-[#EEBF63]
+                transition-all duration-300 ease-in-out"
+         fill="none"
+         viewBox="0 0 24 24"
+         stroke="currentColor"
+         stroke-width="2.5"
+         :class="sidebarOpen ? 'rotate-0' : 'rotate-180'">
+
+        <!-- Double Chevron Shape -->
+        <path stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M13 17l-5-5 5-5M18 17l-5-5 5-5" />
+    </svg>
+
+</button>
+
     </div>
 
     @php
