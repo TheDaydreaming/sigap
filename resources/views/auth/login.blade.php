@@ -16,32 +16,27 @@
         <!-- =========================
              KIRI (BRANDING + PATTERN)
         ========================== -->
-        <div class="bg-[#07213D] flex flex-col justify-center p-12 text-[#E0E2E3] relative overflow-hidden">
+        <div class="bg-[#07213D] relative overflow-hidden 
+            flex flex-col justify-center items-center 
+            p-12 text-[#E0E2E3]">
 
-            <!-- PATTERN / ILUSTRASI HALUS -->
-            <div class="absolute -top-20 -right-20 w-64 h-64 bg-[#EEBF63] opacity-10 rounded-full blur-3xl"></div>
-            <div class="absolute bottom-10 -left-10 w-48 h-48 bg-white opacity-5 rounded-full blur-2xl"></div>
+    <!-- Illustration -->
+    <img src="{{ asset('login.png') }}" 
+         alt="QR Illustration"
+         class="w-[320px] max-w-full mb-8 drop-shadow-2xl 
+                hover:scale-105 transition-transform duration-500">
 
-            <div class="absolute top-6 left-6 text-sm opacity-70">
-                SIGAP
-            </div>
+    <!-- Brand -->
+    <h1 class="text-4xl font-extrabold text-[#EEBF63] tracking-wide mb-4">
+        SIGAP
+    </h1>
 
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-12 h-12 bg-[#EEBF63] text-[#07213D] flex items-center justify-center rounded-lg font-bold text-xl">
-                    S
-                </div>
-                <h1 class="text-4xl font-extrabold text-[#EEBF63]">
-                    SIGAP
-                </h1>
-            </div>
+    <p class="text-lg text-center max-w-sm leading-relaxed">
+        Sistem Identifikasi dan Pengolahan Aset Perangkat.
+    </p>
 
-            <p class="text-lg opacity-90 leading-relaxed max-w-sm">
-                Sistem Identifikasi dan Pengelolaan Perangkat.
-            </p>
+</div>
 
-            <!-- DECORATIVE LINE -->
-            <div class="mt-8 w-20 h-1 bg-[#EEBF63] rounded-full"></div>
-        </div>
 
         <!-- =========================
              KANAN (FORM LOGIN)

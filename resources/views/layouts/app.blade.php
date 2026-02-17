@@ -5,9 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'SIGAP') }}</title>
+    @php
+    $titles = [
+        'dashboard' => 'Dashboard',
+        'devices.index' => 'List Data',
+        'devices.create' => 'Input Data',
+        'devices.qr.list' => 'Generate QR',
+        'devices.qr.show' => 'Code QR',
+        'profile.edit' => 'Profile',
+    ];
+
+    $currentRoute = Route::currentRouteName();
+@endphp
+
+<title>
+    SIGAP |
+    {{ $titles[$currentRoute] ?? 'Dashboard' }}
+</title>
+
+
+
 
     <!-- Fonts -->
+    <link rel="icon" type="image/png" href="{{ asset('tes.png') }}?v=1">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
@@ -27,14 +47,17 @@
         <div class="flex justify-between h-16 items-center">
 
             <!-- LOGO -->
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 bg-[#EEBF63] text-[#07213D] flex items-center justify-center rounded-lg font-bold">
-                    S
-                </div>
+            <div class="flex items-center gap-3">
+                <img src="{{ asset('tis.png') }}" 
+                    alt="Logo SIGAP"
+                    class="w-10 h-10 object-contain">
+
                 <span class="font-bold text-lg text-white tracking-wide">
                     SIGAP
                 </span>
             </div>
+
+
 
             <!-- PROFILE DROPDOWN -->
 <div class="relative" x-data="{ open: false }">
