@@ -60,7 +60,7 @@
 
 
             <!-- PROFILE DROPDOWN -->
-<div class="relative" x-data="{ open: false }">
+<div class="relative z-50" x-data="{ open: false }">
     <button @click="open = !open"
         class="flex items-center gap-3 focus:outline-none 
                bg-[#07213D]/85 backdrop-blur-md border border-white/10
