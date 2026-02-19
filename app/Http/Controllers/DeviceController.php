@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class DeviceController extends Controller
 {
@@ -202,5 +203,48 @@ class DeviceController extends Controller
         return response()->json([
             'message' => 'Deleted'
         ]);
+    }
+    /**
+     * DOWNLOAD SEMUA QR (ZIP)
+     */
+    public function downloadAllQr()
+    {
+        $devices = Device::all();
+        $zipFileName = 'qr-codes-' . now()->format('Y-m-d-His') . '.zip';
+        $zipPath = storage_path('app/public/' . $zipFileName);
+
+        // Pastikan folder public ada
+        if (!file_exists(dirname($zipPath))) {
+            mkdir(dirname($zipPath), 0755, true);
+        }
+
+        $zip = new \ZipArchive;
+
+        if ($zip->open($zipPath, \ZipArchive::CREATE) === TRUE) {
+            $options = new \chillerlan\QRCode\QROptions([
+                'version'      => \chillerlan\QRCode\Common\Version::AUTO,
+                'outputType'   => \chillerlan\QRCode\QRCode::OUTPUT_IMAGE_PNG,
+                'eccLevel'     => \chillerlan\QRCode\QRCode::ECC_H,
+                'scale'        => 10,
+                'imageBase64'  => false,
+            ]);
+
+            foreach ($devices as $device) {
+                // Nama file: nama_pemilik-imei.png (bersihkan karakter aneh)
+                $safeName = Str::slug($device->nama_pemilik);
+                $fileName = "{$safeName}-{$device->imei}.png";
+
+                // URL yang akan di-generate jadi QR
+                $url = url('/public/devices/' . $device->uuid);
+
+                // Generate QR (PNG)
+                $qrContent = (new \chillerlan\QRCode\QRCode($options))->render($url);
+
+                $zip->addFromString($fileName, $qrContent);
+            }
+            $zip->close();
+        }
+
+        return response()->download($zipPath)->deleteFileAfterSend(true);
     }
 }

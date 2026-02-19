@@ -58,6 +58,9 @@ Route::middleware('auth')->group(function () {
         ->name('devices.json');
 
     // ===== QR ROUTES (PAKAI UUID) =====
+    Route::get('/devices/qr/download-all', [DeviceController::class, 'downloadAllQr'])
+        ->name('devices.qr.download-all');
+
     Route::get('/devices/qr', [DeviceController::class, 'qrList'])
         ->name('devices.qr.list');
 
@@ -84,6 +87,8 @@ Route::get('/public/devices/{device:uuid}', [DeviceController::class, 'publicSho
 */
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 require __DIR__.'/auth.php';

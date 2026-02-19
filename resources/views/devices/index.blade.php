@@ -52,111 +52,137 @@
 <div class="py-12 bg-gray-50">
 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
-<!-- HEADER + SEARCH (ADA TOMBOL CARI) -->
-<div class="mb-6 flex justify-between items-center">
+<!-- CONTROL BAR -->
+<div class="mb-6 p-4 sm:p-8 bg-white shadow sm:rounded-lg border border-gray-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
     <div>
-        <h3 class="text-lg font-semibold text-gray-800">Daftar Perangkat Terdaftar</h3>
+        <h3 class="text-lg font-medium text-[#07213D]">Daftar Perangkat</h3>
+        <p class="mt-1 text-sm text-gray-500">Kelola data perangkat yang terdaftar di sistem.</p>
     </div>
 
-    <form method="GET" action="{{ route('devices.index') }}" class="flex gap-2">
-        <input 
-            type="text"
-            name="search"
-            id="searchInput"
-            value="{{ request('search') }}"
-            placeholder="Cari nama / IMEI..."
-            class="rounded-lg border-gray-300 focus:ring-[#EEBF63]"
-        >
-        <button class="bg-[#07213D] text-white px-4 py-2 rounded-lg hover:opacity-90 transition">
-            Cari
-        </button>
-    </form>
+    <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto items-center">
+        <!-- SEARCH -->
+        <div class="relative w-full sm:w-64">
+             <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                <svg class="w-4 h-4 text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>
+            </div>
+            <input
+                type="text"
+                id="searchInput"
+                value="{{ request('search') }}"
+                class="block w-full p-2.5 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-[#07213D] focus:border-[#07213D]"
+                placeholder="Cari Nama / IMEI..."
+            >
+        </div>
+
+        <!-- TAMBAH PERANGKAT -->
+        <a href="{{ route('devices.create') }}" class="inline-flex items-center justify-center px-4 py-2.5 bg-[#07213D] border border-transparent rounded-lg font-semibold text-xs text-white uppercase tracking-widest hover:bg-[#051a2e] focus:bg-[#051a2e] active:bg-[#051a2e] focus:outline-none focus:ring-2 focus:ring-[#07213D] focus:ring-offset-2 transition ease-in-out duration-150 whitespace-nowrap shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            Tambah Perangkat
+        </a>
+    </div>
 </div>
 
-<!-- TABLE -->
-<div class="overflow-x-auto">
-<table class="min-w-full border border-gray-200 rounded-lg overflow-hidden">
-<thead class="bg-[#07213D] text-white">
-<tr>
-<th class="px-4 py-3 text-left text-sm font-semibold">Nama Pemilik</th>
-<th class="px-4 py-3 text-left text-sm font-semibold">IMEI</th>
-<th class="px-4 py-3 text-left text-sm font-semibold">Merek HP</th>
-<th class="px-4 py-3 text-left text-sm font-semibold">Warna HP</th>
-<th class="px-4 py-3 text-left text-sm font-semibold">Foto Pemilik</th>
-<th class="px-4 py-3 text-left text-sm font-semibold">Foto HP</th>
-<th class="px-4 py-3 text-center text-sm font-semibold">Aksi</th>
-</tr>
-</thead>
+<!-- TABLE CARD -->
+<div class="bg-white overflow-hidden shadow-sm sm:rounded-lg border border-gray-100">
+    <div class="overflow-x-auto">
+        <table class="w-full text-sm text-left text-gray-500">
+            <thead class="text-xs text-white uppercase bg-[#07213D]">
+                <tr>
+                    <th scope="col" class="px-6 py-4 rounded-tl-lg">Nama Pemilik</th>
+                    <th scope="col" class="px-6 py-4">IMEI</th>
+                    <th scope="col" class="px-6 py-4">Merek HP</th>
+                    <th scope="col" class="px-6 py-4">Warna HP</th>
+                    <th scope="col" class="px-6 py-4 text-center">Foto Pemilik</th>
+                    <th scope="col" class="px-6 py-4 text-center">Foto HP</th>
+                    <th scope="col" class="px-6 py-4 text-center rounded-tr-lg">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($devices as $d)
+                <tr class="bg-white border-b hover:bg-gray-50 transition-colors">
+                    <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
+                        {{ $d->nama_pemilik }}
+                    </td>
+                    <td class="px-6 py-4 font-mono text-gray-600">
+                        {{ $d->imei }}
+                    </td>
+                    <td class="px-6 py-4">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-50 text-[#07213D] border border-indigo-100">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                            {{ $d->merek_hp }}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-gray-600">
+                        {{ $d->warna_hp }}
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <div class="relative w-12 h-12 mx-auto">
+                            <img src="{{ asset('storage/'.$d->foto_pemilik) }}" 
+                                 class="w-full h-full object-cover rounded-lg shadow-sm border border-gray-200 hover:scale-150 transition-transform duration-300 z-0 hover:z-50 cursor-pointer">
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                         <div class="relative w-12 h-12 mx-auto">
+                            <img src="{{ asset('storage/'.$d->foto_hp) }}" 
+                                 class="w-full h-full object-cover rounded-lg shadow-sm border border-gray-200 hover:scale-150 transition-transform duration-300 z-0 hover:z-50 cursor-pointer">
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                             <!-- DETAIL -->
+                            <button type="button" onclick="openDetailModal('{{ $d->uuid }}')"
+                                    class="p-2 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-100 hover:text-blue-700 transition shadow-sm border border-blue-100" title="Detail">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                            
+                            <!-- EDIT -->
+                            <button type="button" onclick="openEditModal('{{ $d->uuid }}')"
+                                    class="p-2 rounded-lg bg-yellow-50 text-yellow-600 hover:bg-yellow-100 hover:text-yellow-700 transition shadow-sm border border-yellow-100" title="Edit">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                </svg>
+                            </button>
 
-<tbody class="divide-y">
-@forelse($devices as $d)
-<tr class="hover:bg-gray-50 transition">
-<td class="px-4 py-3">{{ $d->nama_pemilik }}</td>
-<td class="px-4 py-3 font-mono">{{ $d->imei }}</td>
-<td class="px-4 py-3">{{ $d->merek_hp }}</td>
-<td class="px-4 py-3">{{ $d->warna_hp }}</td>
+                            <!-- DELETE -->
+                            <button type="button" onclick="openDeleteModal('{{ $d->id }}')"
+                                    class="p-2 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 transition shadow-sm border border-red-100" title="Hapus">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="7" class="px-6 py-10 text-center text-gray-500 bg-gray-50">
+                        <div class="flex flex-col items-center justify-center">
+                            <svg class="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <p class="text-base font-medium">Belum ada data perangkat.</p>
+                            <p class="text-sm mt-1">Silakan tambahkan perangkat baru.</p>
+                        </div>
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
 
-<td class="px-4 py-3">
-<img src="{{ asset('storage/'.$d->foto_pemilik) }}" 
-     class="w-16 h-16 object-cover rounded-lg">
-</td>
-
-<td class="px-4 py-3">
-<img src="{{ asset('storage/'.$d->foto_hp) }}" 
-     class="w-16 h-16 object-cover rounded-lg">
-</td>
-
-<td class="px-4 py-3 text-center flex justify-center items-center gap-2 relative z-10">
-
-<!-- DETAIL -->
-<button type="button" onclick="openDetailModal('{{ $d->uuid }}')"
-        class="p-2 rounded-lg bg-[#07213D]/10 hover:bg-[#07213D]/20 transition z-20">
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
-stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-[#07213D]">
-  <path stroke-linecap="round" stroke-linejoin="round" 
-  d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178a1.01 1.01 0 0 1 0 .644C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"/>
-  <path stroke-linecap="round" stroke-linejoin="round" 
-  d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
-</svg>
-</button>
-
-<!-- EDIT -->
-<button type="button" onclick="openEditModal('{{ $d->uuid }}')"
-        class="p-2 rounded-lg bg-[#EEBF63]/20 hover:bg-[#EEBF63]/40 transition z-20">
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" 
-stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-[#7c5a15]">
-  <path stroke-linecap="round" stroke-linejoin="round" 
-  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l9.932-9.931Z"/>
-</svg>
-</button>
-
-<!-- DELETE (ICON STYLE SAMA DENGAN DETAIL & EDIT) -->
-<button type="button" onclick="openDeleteModal('{{ $d->id }}')"
-        class="p-2 rounded-lg bg-red-100 hover:bg-red-200 transition z-20">
-<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-red-600">
-  <path stroke-linecap="round" stroke-linejoin="round"
-  d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916"/>
-</svg>
-</button>
-
-</td>
-</tr>
-@empty
-<tr>
-<td colspan="7" class="text-center py-8 text-gray-500">
-Belum ada data perangkat.
-</td>
-</tr>
-@endforelse
-</tbody>
-</table>
-</div>
-
-<div class="mt-4">
-{{ $devices->appends(request()->query())->links('pagination::tailwind') }}
-</div>
-
+    <!-- PAGINATION -->
+    <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 rounded-b-lg">
+        {{ $devices->appends(request()->query())->links() }}
+    </div>
 </div>
 </div>
 
@@ -195,40 +221,70 @@ Belum ada data perangkat.
 </div>
 </div>
 
-<!-- =================== MODAL EDIT =================== -->
 <div id="editModal" 
      class="hidden modal-backdrop fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-50">
 
-<div class="modal-content bg-white/80 backdrop-blur-lg border border-white/30 shadow-xl rounded-2xl p-6 w-[520px]">
-    <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-bold text-[#07213D]">Edit Perangkat</h3>
-        <button onclick="closeEditModal()" class="text-gray-500 hover:text-red-500">✖</button>
+<div class="modal-content bg-white/90 backdrop-blur-xl border border-white/30 shadow-2xl rounded-2xl p-6 w-[600px]">
+    <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
+        <div>
+            <h3 class="text-xl font-bold text-[#07213D]">Edit Perangkat</h3>
+            <p class="text-sm text-gray-500">Perbarui informasi perangkat yang terdaftar.</p>
+        </div>
+        <button onclick="closeEditModal()" class="text-gray-400 hover:text-red-500 transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
     </div>
 
-    <form id="editForm" method="POST" class="space-y-3">
+    <form id="editForm" method="POST" class="space-y-4">
         @csrf
         @method('PUT')
 
-        <input id="e_nama" name="nama_pemilik" 
-               class="w-full border rounded-xl p-2 focus:ring-[#EEBF63]">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <!-- NAMA PEMILIK -->
+            <div>
+                <label for="e_nama" class="block text-sm font-semibold text-[#07213D] mb-1">Nama Pemilik</label>
+                <input id="e_nama" name="nama_pemilik" type="text"
+                       class="w-full rounded-xl border-gray-300 focus:border-[#EEBF63] focus:ring focus:ring-[#EEBF63]/20 transition shadow-sm"
+                       placeholder="Masukkan nama pemilik">
+            </div>
 
-        <input id="e_imei" name="imei" 
-               class="w-full border rounded-xl p-2 focus:ring-[#EEBF63]">
+            <!-- IMEI -->
+            <div>
+                <label for="e_imei" class="block text-sm font-semibold text-[#07213D] mb-1">Nomor IMEI</label>
+                <input id="e_imei" name="imei" type="text"
+                       class="w-full rounded-xl border-gray-300 focus:border-[#EEBF63] focus:ring focus:ring-[#EEBF63]/20 transition shadow-sm font-mono"
+                       placeholder="Contoh: 356...">
+            </div>
 
-        <input id="e_merek" name="merek_hp" 
-               class="w-full border rounded-xl p-2 focus:ring-[#EEBF63]">
+            <!-- MEREK HP -->
+            <div>
+                <label for="e_merek" class="block text-sm font-semibold text-[#07213D] mb-1">Merek Perangkat</label>
+                <input id="e_merek" name="merek_hp" type="text"
+                       class="w-full rounded-xl border-gray-300 focus:border-[#EEBF63] focus:ring focus:ring-[#EEBF63]/20 transition shadow-sm"
+                       placeholder="Contoh: Samsung, Xiaomi...">
+            </div>
 
-        <input id="e_warna" name="warna_hp" 
-               class="w-full border rounded-xl p-2 focus:ring-[#EEBF63]">
+            <!-- WARNA HP -->
+            <div>
+                <label for="e_warna" class="block text-sm font-semibold text-[#07213D] mb-1">Warna Perangkat</label>
+                <input id="e_warna" name="warna_hp" type="text"
+                       class="w-full rounded-xl border-gray-300 focus:border-[#EEBF63] focus:ring focus:ring-[#EEBF63]/20 transition shadow-sm"
+                       placeholder="Contoh: Hitam, Biru...">
+            </div>
+        </div>
 
-        <div class="flex justify-end space-x-2 mt-4">
+
+
+        <div class="flex justify-end space-x-3 pt-4 border-t border-gray-100 mt-2">
             <button type="button" onclick="closeEditModal()" 
-                    class="bg-gray-200 px-4 py-2 rounded-xl hover:bg-gray-300 transition">
+                    class="px-5 py-2.5 rounded-xl text-sm font-medium text-gray-600 bg-gray-100 hover:bg-gray-200 transition">
                 Batal
             </button>
             <button type="submit"
-                    class="bg-[#07213D] text-white px-4 py-2 rounded-xl hover:opacity-90 transition">
-                Simpan
+                    class="px-5 py-2.5 rounded-xl text-sm font-bold text-white bg-[#07213D] hover:bg-[#051a2e] shadow-lg hover:shadow-xl transition transform hover:-translate-y-0.5">
+                Simpan Perubahan
             </button>
         </div>
     </form>
@@ -319,6 +375,8 @@ function openEditModal(uuid) {
             document.getElementById("e_imei").value = d.imei;
             document.getElementById("e_merek").value = d.merek_hp;
             document.getElementById("e_warna").value = d.warna_hp;
+
+
             document.getElementById("editForm").action = `/devices/${d.id}`;
             showModal("editModal");
         });
@@ -372,6 +430,34 @@ function hideToast() {
     const toast = document.getElementById("toast");
     toast.classList.add("translate-y-10", "opacity-0", "pointer-events-none");
 }
+
+/* ========== LIVE SEARCH ========== */
+document.addEventListener("DOMContentLoaded", function() {
+    const searchInput = document.getElementById("searchInput");
+    let timeout = null;
+
+    searchInput.addEventListener("input", function() {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            const url = new URL(window.location.href);
+            if (this.value.trim() === "") {
+                url.searchParams.delete("search");
+            } else {
+                url.searchParams.set("search", this.value);
+            }
+            url.searchParams.set("page", 1);
+            window.location.href = url.toString();
+        }, 500);
+    });
+
+    // Focus input if search param exists
+    if (new URLSearchParams(window.location.search).has("search")) {
+        searchInput.focus();
+        const val = searchInput.value;
+        searchInput.value = '';
+        searchInput.value = val;
+    }
+});
 </script>
 
 </x-app-layout>
