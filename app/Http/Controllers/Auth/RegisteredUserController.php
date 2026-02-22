@@ -43,8 +43,7 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
-        Auth::login($user);
-
-        return redirect(route('dashboard', absolute: false));
+        // Jangan login sebagai user baru — admin tetap pada sesinya
+        return redirect(route('register'))->with('status', 'user-registered');
     }
 }
