@@ -47,7 +47,109 @@
     color: #07213D;
     border-color: #EEBF63;
 }
+
+/* ========== SWEETALERT2 CUSTOM DEVICE ========== */
+.swal-device-popup {
+    border-radius: 24px !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    border: none !important;
+    box-shadow: 0 25px 60px rgba(7, 33, 61, 0.2) !important;
+    max-width: 400px !important;
+}
+.swal-device-header {
+    background: linear-gradient(135deg, #07213D 0%, #0A2E52 100%);
+    padding: 28px 28px 20px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+}
+.swal-device-header::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 110px; height: 110px;
+    background: rgba(238,191,99,0.12);
+    border-radius: 50%;
+}
+.swal-device-icon-ring {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: rgba(238,191,99,0.15);
+    border: 2px solid rgba(238,191,99,0.3);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 14px;
+    animation: swal-pulse 2s infinite;
+}
+@keyframes swal-pulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(238,191,99,0.3); }
+    50%      { box-shadow: 0 0 0 10px rgba(238,191,99,0); }
+}
+.swal-device-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(34,197,94,0.15);
+    border: 1px solid rgba(34,197,94,0.3);
+    color: #4ade80;
+    font-size: 10px; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 3px 10px; border-radius: 999px;
+    margin-bottom: 8px;
+}
+.swal-device-badge-dot {
+    width: 5px; height: 5px;
+    background: #4ade80; border-radius: 50%;
+    animation: swal-blink 1s infinite;
+}
+@keyframes swal-blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.swal-device-title {
+    color: #fff;
+    font-size: 18px; font-weight: 700;
+    letter-spacing: -0.02em; margin: 0;
+}
+.swal-device-body {
+    padding: 20px 24px 24px;
+    background: #fff;
+}
+.swal-device-text {
+    color: #6b7280; font-size: 13px; line-height: 1.6;
+    margin: 0 0 16px;
+}
+.swal-device-meta {
+    display: flex; align-items: center; gap: 8px;
+    background: #f9fafb; border: 1px solid #f3f4f6;
+    border-radius: 10px; padding: 9px 12px;
+    margin-bottom: 16px;
+}
+.swal-device-meta-icon { color: #EEBF63; flex-shrink: 0; }
+.swal-device-meta-text { font-size: 11px; color: #9ca3af; }
+.swal-device-meta-text strong { color: #374151; display: block; font-size: 12px; }
+.swal-device-btn {
+    width: 100%;
+    background: linear-gradient(135deg, #07213D, #0A2E52) !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 12px 20px !important;
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+    box-shadow: 0 4px 14px rgba(7,33,61,0.25) !important;
+}
+.swal-device-btn:hover {
+    background: linear-gradient(135deg, #0A2E52, #0d3b65) !important;
+    box-shadow: 0 6px 18px rgba(7,33,61,0.35) !important;
+    transform: translateY(-1px);
+}
+.swal2-timer-progress-bar { background: linear-gradient(90deg,#EEBF63,#f5d07a) !important; height: 3px !important; }
+.swal2-show { animation: swal-in 0.35s cubic-bezier(0.34,1.56,0.64,1) !important; }
+.swal2-hide { animation: swal-out 0.2s ease-in !important; }
+@keyframes swal-in  { from{opacity:0;transform:scale(0.86) translateY(-18px)} to{opacity:1;transform:scale(1) translateY(0)} }
+@keyframes swal-out { from{opacity:1;transform:scale(1)} to{opacity:0;transform:scale(0.92) translateY(8px)} }
 </style>
+
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <div class="py-12 bg-gray-50">
 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -123,14 +225,14 @@
                     </td>
                     <td class="px-6 py-4 text-center">
                         <div class="relative w-12 h-12 mx-auto">
-                            <img src="{{ asset('storage/'.$d->foto_pemilik) }}" 
-                                 class="w-full h-full object-cover rounded-lg shadow-sm border border-gray-200 hover:scale-150 transition-transform duration-300 z-0 hover:z-50 cursor-pointer">
+                            <img src="{{ asset('storage/'.$d->foto_pemilik) }}" loading="lazy"
+                                 class="w-full h-full object-cover rounded-lg shadow-sm border border-gray-200 hover:opacity-80 transition-opacity duration-200 cursor-pointer">
                         </div>
                     </td>
                     <td class="px-6 py-4 text-center">
-                         <div class="relative w-12 h-12 mx-auto">
-                            <img src="{{ asset('storage/'.$d->foto_hp) }}" 
-                                 class="w-full h-full object-cover rounded-lg shadow-sm border border-gray-200 hover:scale-150 transition-transform duration-300 z-0 hover:z-50 cursor-pointer">
+                            <div class="relative w-12 h-12 mx-auto">
+                            <img src="{{ asset('storage/'.$d->foto_hp) }}" loading="lazy"
+                                 class="w-full h-full object-cover rounded-lg shadow-sm border border-gray-200 hover:opacity-80 transition-opacity duration-200 cursor-pointer">
                         </div>
                     </td>
                     <td class="px-6 py-4 text-center">
@@ -187,10 +289,10 @@
 </div>
 
 <!-- =================== MODAL DETAIL (LEBIH KECIL) =================== -->
-<div id="detailModal" 
-     class="hidden modal-backdrop fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-50">
+<div id="detailModal"
+     class="hidden modal-backdrop fixed inset-0 bg-black/50 flex items-center justify-center z-50">
 
-<div class="modal-content bg-white/80 backdrop-blur-lg border border-white/30 shadow-xl rounded-2xl p-5 w-[420px]">
+<div class="modal-content bg-white shadow-xl rounded-2xl p-5 w-[420px]">
     <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg font-bold text-[#07213D]">Detail Perangkat</h3>
         <button onclick="closeDetailModal()" class="text-gray-500 hover:text-red-500">✖</button>
@@ -221,10 +323,10 @@
 </div>
 </div>
 
-<div id="editModal" 
-     class="hidden modal-backdrop fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-50">
+<div id="editModal"
+     class="hidden modal-backdrop fixed inset-0 bg-black/50 flex items-center justify-center z-50">
 
-<div class="modal-content bg-white/90 backdrop-blur-xl border border-white/30 shadow-2xl rounded-2xl p-6 w-[600px]">
+<div class="modal-content bg-white shadow-2xl rounded-2xl p-6 w-[600px]">
     <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-100">
         <div>
             <h3 class="text-xl font-bold text-[#07213D]">Edit Perangkat</h3>
@@ -292,10 +394,10 @@
 </div>
 
 <!-- ============ MODAL KONFIRMASI HAPUS ============ -->
-<div id="deleteModal" 
-     class="hidden modal-backdrop fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center z-50">
+<div id="deleteModal"
+     class="hidden modal-backdrop fixed inset-0 bg-black/50 flex items-center justify-center z-50">
 
-<div class="modal-content bg-white/80 backdrop-blur-lg border border-white/30 shadow-xl rounded-2xl p-6 w-[420px] text-center">
+<div class="modal-content bg-white shadow-xl rounded-2xl p-6 w-[420px] text-center">
     <h3 class="text-lg font-bold text-red-600">Hapus Perangkat?</h3>
     <p class="text-sm text-gray-600 mt-2">
         Data yang dihapus tidak dapat dikembalikan.
@@ -318,7 +420,7 @@
 <div id="toast"
      class="fixed bottom-6 right-6 translate-y-10 opacity-0 pointer-events-none transition-all duration-300 ease-out z-50">
 
-<div class="bg-white/80 backdrop-blur-lg border border-white/30 shadow-xl rounded-xl px-5 py-4 flex items-center gap-3">
+<div class="bg-white shadow-xl border border-gray-100 rounded-xl px-5 py-4 flex items-center gap-3">
 
 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
 stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-green-600">
@@ -457,6 +559,76 @@ document.addEventListener("DOMContentLoaded", function() {
         searchInput.value = '';
         searchInput.value = val;
     }
+
+    /* ========== EDIT FORM — AJAX + SWEETALERT ========== */
+    document.getElementById("editForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const form   = this;
+        const action = form.action;
+        const data   = new FormData(form);
+
+        fetch(action, {
+            method: "POST",
+            headers: { "X-CSRF-TOKEN": "{{ csrf_token() }}", "Accept": "application/json" },
+            body: data
+        })
+        .then(async res => {
+            const json = await res.json();
+            if (!res.ok) throw json;
+            return json;
+        })
+        .then(() => {
+            closeEditModal();
+            Swal.fire({
+                html: `
+                    <div class="swal-device-header">
+                        <div class="swal-device-icon-ring">
+                            <svg width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="#EEBF63" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
+                        </div>
+                        <div class="swal-device-badge">
+                            <span class="swal-device-badge-dot"></span> Berhasil
+                        </div>
+                        <h2 class="swal-device-title">Perangkat Diperbarui!</h2>
+                    </div>
+                    <div class="swal-device-body">
+                        <p class="swal-device-text">Data perangkat telah berhasil diperbarui dan disimpan ke sistem.</p>
+                        <div class="swal-device-meta">
+                            <svg class="swal-device-meta-icon" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <div class="swal-device-meta-text">
+                                <strong>Tersimpan otomatis</strong>
+                                Perubahan aktif sekarang
+                            </div>
+                        </div>
+                        <button class="swal-device-btn" onclick="Swal.close()">
+                            Oke, Mengerti!
+                        </button>
+                    </div>`,
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true,
+                customClass: { popup: 'swal-device-popup' },
+                backdrop: 'rgba(7,33,61,0.35)',
+            }).then(() => location.reload());
+        })
+        .catch(err => {
+            const msg = err?.errors
+                ? Object.values(err.errors).flat().join('<br>')
+                : (err?.message || 'Terjadi kesalahan. Silakan coba lagi.');
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal Menyimpan',
+                html: msg,
+                confirmButtonColor: '#07213D',
+                confirmButtonText: 'Coba Lagi',
+                customClass: { popup: 'swal-device-popup' },
+            });
+        });
+    });
 });
 </script>
 

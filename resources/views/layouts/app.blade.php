@@ -37,17 +37,17 @@
     [x-cloak] { display: none !important; }
 </style>
 </head>
-<body class="font-sans antialiased bg-[#E0E2E3]">
+<body class="font-sans antialiased bg-[#E0E2E3] h-screen overflow-hidden">
 
-<div class="min-h-screen flex flex-col" x-data="{ sidebarOpen: true }">
+<div class="h-screen overflow-hidden flex flex-col" x-data="{ sidebarOpen: true }">
 
 <!-- ================= NAVBAR (UPDATED) ================= -->
 <header class="bg-[#07213D] border-b border-[#0A2F52] shadow-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="w-full px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16 items-center">
 
             <!-- LOGO -->
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 flex-shrink-0">
                 <img src="{{ asset('tis.png') }}" 
                     alt="Logo SIGAP"
                     class="w-10 h-10 object-contain">
@@ -60,7 +60,7 @@
 
 
             <!-- PROFILE DROPDOWN -->
-<div class="relative z-50" x-data="{ open: false }">
+<div class="relative z-50 flex-shrink-0" x-data="{ open: false }">
     <button @click="open = !open"
         class="flex items-center gap-3 focus:outline-none 
                bg-[#07213D]/85 backdrop-blur-md border border-white/10
@@ -151,7 +151,7 @@
     </div>
 </header>
 
-<div class="flex flex-1">
+<div class="flex flex-1 overflow-hidden">
 
 <!-- ============== SIDEBAR (GLASS + ACTIVE STRIP) ============== -->
 <aside :class="sidebarOpen ? 'w-64' : 'w-20'"
@@ -249,7 +249,7 @@
 </aside>
 
 <!-- ============== KONTEN UTAMA ============== -->
-<main class="flex-1 p-6">
+<main class="flex-1 overflow-y-auto p-6">
     <div class="max-w-7xl mx-auto">
         {{ $slot }}
     </div>
