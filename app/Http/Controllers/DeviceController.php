@@ -28,6 +28,7 @@ class DeviceController extends Controller
         $request->validate([
             'nama_pemilik' => 'required|string|max:255',
             'imei' => 'required|string|max:255|unique:devices,imei',
+            'imei2' => 'nullable|string|max:255|unique:devices,imei2',
             'merek_hp' => 'required|string|max:255',
             'warna_hp' => 'required|string|max:100',
             'foto_pemilik' => 'required|image|mimes:jpg,jpeg,png|max:5120',
@@ -46,6 +47,7 @@ class DeviceController extends Controller
         Device::create([
             'nama_pemilik' => $request->nama_pemilik,
             'imei' => $request->imei,
+            'imei2' => $request->imei2,
             'merek_hp' => $request->merek_hp,
             'warna_hp' => $request->warna_hp,
             'foto_pemilik' => $fotoPemilik,
@@ -123,6 +125,7 @@ class DeviceController extends Controller
             'uuid' => $device->uuid,
             'nama_pemilik' => $device->nama_pemilik,
             'imei' => $device->imei,
+            'imei2' => $device->imei2,
             'merek_hp' => $device->merek_hp,
             'warna_hp' => $device->warna_hp,
             'foto_pemilik' => $device->foto_pemilik,
@@ -139,6 +142,7 @@ class DeviceController extends Controller
         $request->validate([
             'nama_pemilik' => 'required|string|max:255',
             'imei' => 'required|string|max:255|unique:devices,imei,' . $device->id,
+            'imei2' => 'nullable|string|max:255|unique:devices,imei2,' . $device->id,
             'merek_hp' => 'required|string|max:255',
             'warna_hp' => 'required|string|max:100',
         ]);
@@ -146,6 +150,7 @@ class DeviceController extends Controller
         $device->update($request->only([
             'nama_pemilik',
             'imei',
+            'imei2',
             'merek_hp',
             'warna_hp'
         ]));

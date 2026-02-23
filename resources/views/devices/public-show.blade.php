@@ -139,7 +139,7 @@
                                 <rect x="3" y="4" width="18" height="16" rx="2"/>
                                 <path d="M7 8h10M7 12h10M7 16h6"/>
                             </svg>
-                            IMEI
+                            IMEI 1
                         </div>
 
                         <span class="font-mono text-sm px-3 py-1 rounded-lg"
@@ -147,6 +147,27 @@
                             {{ $device->imei }}
                         </span>
                     </div>
+
+                    @if($device->imei2)
+                    <!-- IMEI 2 -->
+                    <div class="px-6 py-5 flex justify-between items-center hover:bg-gray-50 transition border-t">
+                        <div class="flex items-center gap-3 text-sm"
+                             style="color:#6B7280;">
+                            <svg width="18" height="18" fill="none"
+                                 stroke="#EEBF63" stroke-width="2"
+                                 viewBox="0 0 24 24">
+                                <rect x="3" y="4" width="18" height="16" rx="2"/>
+                                <path d="M7 8h10M7 12h10M7 16h6"/>
+                            </svg>
+                            IMEI 2
+                        </div>
+
+                        <span class="font-mono text-sm px-3 py-1 rounded-lg"
+                              style="background:#F3F4F6; color:#07213D;">
+                            {{ $device->imei2 }}
+                        </span>
+                    </div>
+                    @endif
 
                     <!-- Merek -->
                     <div class="px-6 py-5 flex justify-between items-center hover:bg-gray-50 transition">

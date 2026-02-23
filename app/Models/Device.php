@@ -13,6 +13,7 @@ class Device extends Model
     protected $fillable = [
         'nama_pemilik',
         'imei',
+        'imei2',
         'merek_hp',
         'warna_hp',
         'foto_pemilik',

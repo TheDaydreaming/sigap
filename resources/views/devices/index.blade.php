@@ -209,8 +209,19 @@
                     <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                         {{ $d->nama_pemilik }}
                     </td>
-                    <td class="px-6 py-4 font-mono text-gray-600">
-                        {{ $d->imei }}
+                    <td class="px-6 py-4">
+                        <div class="flex flex-col gap-2">
+                            <div class="flex items-center gap-2">
+                                <span class="px-2 py-0.5 rounded-md bg-[#07213D]/5 text-[#07213D] text-[10px] font-bold uppercase border border-[#07213D]/10 min-w-[48px] text-center">IMEI 1</span>
+                                <span class="font-mono text-xs font-bold text-gray-800">{{ $d->imei }}</span>
+                            </div>
+                            @if($d->imei2)
+                                <div class="flex items-center gap-2">
+                                    <span class="px-2 py-0.5 rounded-md bg-[#EEBF63]/10 text-[#a67c2e] text-[10px] font-bold uppercase border border-[#EEBF63]/20 min-w-[48px] text-center">IMEI 2</span>
+                                    <span class="font-mono text-xs font-bold text-gray-700">{{ $d->imei2 }}</span>
+                                </div>
+                            @endif
+                        </div>
                     </td>
                     <td class="px-6 py-4">
                         <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-indigo-50 text-[#07213D] border border-indigo-100">
@@ -300,7 +311,8 @@
 
     <div class="space-y-2 text-sm text-gray-700">
         <p><strong>Nama:</strong> <span id="d_nama"></span></p>
-        <p><strong>IMEI:</strong> <span id="d_imei"></span></p>
+        <p><strong>IMEI 1:</strong> <span id="d_imei"></span></p>
+        <p id="d_imei2_wrapper"><strong>IMEI 2:</strong> <span id="d_imei2"></span></p>
         <p><strong>Merek:</strong> <span id="d_merek"></span></p>
         <p><strong>Warna:</strong> <span id="d_warna"></span></p>
     </div>
@@ -354,8 +366,16 @@
 
             <!-- IMEI -->
             <div>
-                <label for="e_imei" class="block text-sm font-semibold text-[#07213D] mb-1">Nomor IMEI</label>
+                <label for="e_imei" class="block text-sm font-semibold text-[#07213D] mb-1">Nomor IMEI 1</label>
                 <input id="e_imei" name="imei" type="text"
+                       class="w-full rounded-xl border-gray-300 focus:border-[#EEBF63] focus:ring focus:ring-[#EEBF63]/20 transition shadow-sm font-mono"
+                       placeholder="Contoh: 356...">
+            </div>
+
+            <!-- IMEI 2 -->
+            <div>
+                <label for="e_imei2" class="block text-sm font-semibold text-[#07213D] mb-1">Nomor IMEI 2 (Opsional)</label>
+                <input id="e_imei2" name="imei2" type="text"
                        class="w-full rounded-xl border-gray-300 focus:border-[#EEBF63] focus:ring focus:ring-[#EEBF63]/20 transition shadow-sm font-mono"
                        placeholder="Contoh: 356...">
             </div>
@@ -457,6 +477,15 @@ function openDetailModal(uuid) {
         .then(d => {
             document.getElementById("d_nama").innerText = d.nama_pemilik;
             document.getElementById("d_imei").innerText = d.imei;
+            
+            const imei2Wrapper = document.getElementById("d_imei2_wrapper");
+            if (d.imei2) {
+                document.getElementById("d_imei2").innerText = d.imei2;
+                imei2Wrapper.classList.remove("hidden");
+            } else {
+                imei2Wrapper.classList.add("hidden");
+            }
+
             document.getElementById("d_merek").innerText = d.merek_hp;
             document.getElementById("d_warna").innerText = d.warna_hp;
             document.getElementById("d_foto_pemilik").src = "/storage/" + d.foto_pemilik;
@@ -475,6 +504,7 @@ function openEditModal(uuid) {
         .then(d => {
             document.getElementById("e_nama").value = d.nama_pemilik;
             document.getElementById("e_imei").value = d.imei;
+            document.getElementById("e_imei2").value = d.imei2 || '';
             document.getElementById("e_merek").value = d.merek_hp;
             document.getElementById("e_warna").value = d.warna_hp;
 

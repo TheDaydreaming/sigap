@@ -132,6 +132,19 @@
 
                             <div>
                                 <label class="block text-sm font-medium mb-1" style="color:#07213D;">
+                                    IMEI 2 (Opsional)
+                                </label>
+                                <input 
+                                    type="text" 
+                                    name="imei2" 
+                                    id="imei2"
+                                    class="w-full rounded-xl border-gray-300 focus:ring-0 focus:border-[#EEBF63]"
+                                    placeholder="Masukkan nomor IMEI kedua jika ada">
+                                <p class="text-xs mt-1 hidden text-green-600" id="imei2Valid">✓ Valid</p>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium mb-1" style="color:#07213D;">
                                     Merek HP
                                 </label>
                                 <input 
@@ -298,8 +311,12 @@ document.addEventListener("DOMContentLoaded", function() {
         "foto_hp"
     ];
 
+    const optionalFields = [
+        "imei2"
+    ];
+
     // ✅ VALIDASI VISUAL (HIJAU = VALID)
-    fields.forEach(id => {
+    fields.concat(optionalFields).forEach(id => {
         const input = document.getElementById(id);
 
         input.addEventListener("input", function() {
@@ -307,8 +324,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 this.classList.add("border-green-600");
                 this.classList.remove("border-red-600");
             } else {
-                this.classList.add("border-red-600");
-                this.classList.remove("border-green-600");
+                if (fields.includes(id)) {
+                    this.classList.add("border-red-600");
+                    this.classList.remove("border-green-600");
+                } else {
+                    this.classList.remove("border-red-600", "border-green-600");
+                }
             }
         });
     });

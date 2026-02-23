@@ -60,8 +60,19 @@
                                 <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
                                     {{ $d->nama_pemilik }}
                                 </td>
-                                <td class="px-6 py-4 font-mono text-gray-600">
-                                    {{ $d->imei }}
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-col gap-2">
+                                        <div class="flex items-center gap-2">
+                                            <span class="px-2 py-0.5 rounded-md bg-[#07213D]/5 text-[#07213D] text-[10px] font-bold uppercase border border-[#07213D]/10 min-w-[48px] text-center">IMEI 1</span>
+                                            <span class="font-mono text-xs font-bold text-gray-800">{{ $d->imei }}</span>
+                                        </div>
+                                        @if($d->imei2)
+                                            <div class="flex items-center gap-2">
+                                                <span class="px-2 py-0.5 rounded-md bg-[#EEBF63]/10 text-[#a67c2e] text-[10px] font-bold uppercase border border-[#EEBF63]/20 min-w-[48px] text-center">IMEI 2</span>
+                                                <span class="font-mono text-xs font-bold text-gray-700">{{ $d->imei2 }}</span>
+                                            </div>
+                                        @endif
+                                    </div>
                                 </td>
                                 <td class="px-6 py-4 text-center">
                                     <a href="{{ route('devices.qr.show', $d->uuid) }}"

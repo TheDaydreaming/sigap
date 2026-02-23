@@ -108,7 +108,7 @@
                     </span>
                 </div>
 
-                <!-- IMEI -->
+                <!-- IMEI 1 -->
                 <div class="flex justify-between items-center border-b pb-3"
                      style="border-color:#E0E2E3;">
                     <div class="flex items-center gap-3" style="color:#07213D;">
@@ -117,12 +117,30 @@
                              viewBox="0 0 24 24">
                             <path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"></path>
                         </svg>
-                        <span class="font-medium">IMEI</span>
+                        <span class="font-medium">IMEI 1</span>
                     </div>
                     <span style="color:#07213D;">
                         {{ $device->imei }}
                     </span>
                 </div>
+
+                @if($device->imei2)
+                <!-- IMEI 2 -->
+                <div class="flex justify-between items-center border-b pb-3"
+                     style="border-color:#E0E2E3;">
+                    <div class="flex items-center gap-3" style="color:#07213D;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                             fill="none" stroke="#EEBF63" stroke-width="2"
+                             viewBox="0 0 24 24">
+                            <path d="M4 9h16M4 15h16M10 3L8 21M16 3l-2 18"></path>
+                        </svg>
+                        <span class="font-medium">IMEI 2</span>
+                    </div>
+                    <span style="color:#07213D;">
+                        {{ $device->imei2 }}
+                    </span>
+                </div>
+                @endif
 
                 <!-- Merek -->
                 <div class="flex justify-between items-center border-b pb-3"
