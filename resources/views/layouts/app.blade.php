@@ -27,7 +27,7 @@
 
 
     <!-- Fonts -->
-    <link rel="icon" type="image/png" href="{{ asset('tes.png') }}?v=1">
+    <link rel="icon" type="image/png" href="{{ asset('logo-sigap.png') }}?v=1">
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
@@ -48,7 +48,7 @@
 
             <!-- LOGO -->
             <div class="flex items-center gap-3 flex-shrink-0">
-                <img src="{{ asset('tis.png') }}" 
+                <img src="{{ asset('logo-sigap.png') }}" 
                     alt="Logo SIGAP"
                     class="w-10 h-10 object-contain">
 
