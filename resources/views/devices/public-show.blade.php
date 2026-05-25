@@ -61,7 +61,7 @@
                 <div class="inline-block p-2 rounded-2xl transition duration-300 group-hover:shadow-lg"
                      style="background:#F4F6F9;">
                     <img 
-                        src="{{ asset('storage/'.$device->foto_pemilik) }}" 
+                        src="{{ Storage::url($device->foto_pemilik) }}" 
                         class="rounded-xl w-56 h-56 object-cover shadow-sm transition duration-300 group-hover:scale-105"
                     >
                 </div>
@@ -75,7 +75,7 @@
                 <div class="inline-block p-2 rounded-2xl transition duration-300 group-hover:shadow-lg"
                      style="background:#F4F6F9;">
                     <img 
-                        src="{{ asset('storage/'.$device->foto_hp) }}" 
+                        src="{{ Storage::url($device->foto_hp) }}" 
                         class="rounded-xl w-56 h-56 object-cover shadow-sm transition duration-300 group-hover:scale-105"
                     >
                 </div>

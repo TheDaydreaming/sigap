@@ -236,13 +236,13 @@
                     </td>
                     <td class="px-6 py-4 text-center">
                         <div class="relative w-12 h-12 mx-auto">
-                            <img src="{{ asset('storage/'.$d->foto_pemilik) }}" loading="lazy"
+                            <img src="{{ Storage::url($d->foto_pemilik) }}" loading="lazy"
                                  class="w-full h-full object-cover rounded-lg shadow-sm border border-gray-200 hover:opacity-80 transition-opacity duration-200 cursor-pointer">
                         </div>
                     </td>
                     <td class="px-6 py-4 text-center">
                             <div class="relative w-12 h-12 mx-auto">
-                            <img src="{{ asset('storage/'.$d->foto_hp) }}" loading="lazy"
+                            <img src="{{ Storage::url($d->foto_hp) }}" loading="lazy"
                                  class="w-full h-full object-cover rounded-lg shadow-sm border border-gray-200 hover:opacity-80 transition-opacity duration-200 cursor-pointer">
                         </div>
                     </td>

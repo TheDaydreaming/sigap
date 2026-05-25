@@ -35,12 +35,16 @@ class DeviceController extends Controller
             'foto_hp' => 'required|image|mimes:jpg,jpeg,png|max:5120',
         ]);
 
-        // Simpan file
-        $fotoPemilik = $request->file('foto_pemilik')->store('pemilik', 'public');
-        $fotoHp = $request->file('foto_hp')->store('hp', 'public');
+        $disk = env('FILESYSTEM_DISK', 'public');
 
-        Storage::disk('public')->setVisibility($fotoPemilik, 'public');
-        Storage::disk('public')->setVisibility($fotoHp, 'public');
+        // Simpan file
+        $fotoPemilik = $request->file('foto_pemilik')->store('pemilik', $disk);
+        $fotoHp = $request->file('foto_hp')->store('hp', $disk);
+
+        if ($disk === 'public') {
+            Storage::disk('public')->setVisibility($fotoPemilik, 'public');
+            Storage::disk('public')->setVisibility($fotoHp, 'public');
+        }
 
         $uuid = (string) Str::uuid();
 
@@ -100,10 +104,10 @@ class DeviceController extends Controller
 
         return DataTables::of($query)
             ->addColumn('foto_pemilik', function ($row) {
-                return asset('storage/' . $row->foto_pemilik);
+                return Storage::url($row->foto_pemilik);
             })
             ->addColumn('foto_hp', function ($row) {
-                return asset('storage/' . $row->foto_hp);
+                return Storage::url($row->foto_hp);
             })
             ->addColumn('aksi', function ($row) {
                 return [
@@ -198,10 +202,11 @@ class DeviceController extends Controller
     public function destroy($id)
     {
         $device = Device::findOrFail($id);
+        $disk = env('FILESYSTEM_DISK', 'public');
 
         // Hapus file biar storage bersih
-        Storage::disk('public')->delete($device->foto_pemilik);
-        Storage::disk('public')->delete($device->foto_hp);
+        Storage::disk($disk)->delete($device->foto_pemilik);
+        Storage::disk($disk)->delete($device->foto_hp);
 
         $device->delete();
 
