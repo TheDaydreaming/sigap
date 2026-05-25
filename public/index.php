@@ -20,6 +20,8 @@ $app = require_once __DIR__.'/../bootstrap/app.php';
 try {
     $kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
     if (method_exists($kernel, 'bootstrap')) {
+        $request = Illuminate\Http\Request::capture();
+        $app->instance('request', $request);
         $kernel->bootstrap();
     }
 } catch (\Throwable $e) {
