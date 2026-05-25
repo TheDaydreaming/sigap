@@ -60,7 +60,7 @@
                 {!! QrCode::size(280)
                     ->margin(2)
                     ->errorCorrection('H')
-                    ->generate(url('/public/devices/' . $device->uuid)) !!}
+                    ->generate(url('/devices/public/' . $device->uuid)) !!}
             </div>
 
         </div>
@@ -277,7 +277,7 @@ function downloadQRasPNG() {
 }
 
 function copyQRLink() {
-    const link = "{{ url('/public/devices/' . $device->uuid) }}";
+    const link = "{{ url('/devices/public/' . $device->uuid) }}";
     navigator.clipboard.writeText(link);
 }
 </script>

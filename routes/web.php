@@ -77,7 +77,7 @@ Route::middleware('auth')->group(function () {
 | DEVICE ROUTE (PUBLIC - HASIL SCAN QR)
 |--------------------------------------------------------------------------
 */
-Route::get('/public/devices/{device:uuid}', [DeviceController::class, 'publicShow'])
+Route::get('/devices/public/{device:uuid}', [DeviceController::class, 'publicShow'])
     ->name('devices.public.show');
 
 /*

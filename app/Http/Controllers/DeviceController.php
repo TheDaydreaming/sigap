@@ -245,7 +245,7 @@ class DeviceController extends Controller
                 $fileName = "{$safeName}-{$device->imei}.png";
 
                 // URL yang akan di-generate jadi QR
-                $url = url('/public/devices/' . $device->uuid);
+                $url = url('/devices/public/' . $device->uuid);
 
                 // Generate QR (PNG)
                 $qrContent = (new \chillerlan\QRCode\QRCode($options))->render($url);
