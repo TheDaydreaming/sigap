@@ -15,7 +15,10 @@ try {
             $middleware->trustProxies(at: '*');
         })
         ->withExceptions(function (Exceptions $exceptions): void {
-            //
+            $exceptions->report(function (\Throwable $e) {
+                error_log("SIGAP_ORIGINAL_ERROR: " . get_class($e) . " - " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine());
+                error_log($e->getTraceAsString());
+            });
         })->create();
 } catch (\Throwable $e) {
     error_log("SIGAP_BOOT_ERROR: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine());
