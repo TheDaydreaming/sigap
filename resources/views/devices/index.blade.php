@@ -488,8 +488,8 @@ function openDetailModal(uuid) {
 
             document.getElementById("d_merek").innerText = d.merek_hp;
             document.getElementById("d_warna").innerText = d.warna_hp;
-            document.getElementById("d_foto_pemilik").src = "/storage/" + d.foto_pemilik;
-            document.getElementById("d_foto_hp").src = "/storage/" + d.foto_hp;
+            document.getElementById("d_foto_pemilik").src = d.foto_pemilik;
+            document.getElementById("d_foto_hp").src = d.foto_hp;
             showModal("detailModal");
         });
 }

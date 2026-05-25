@@ -132,8 +132,8 @@ class DeviceController extends Controller
             'imei2' => $device->imei2,
             'merek_hp' => $device->merek_hp,
             'warna_hp' => $device->warna_hp,
-            'foto_pemilik' => $device->foto_pemilik,
-            'foto_hp' => $device->foto_hp,
+            'foto_pemilik' => Storage::url($device->foto_pemilik),
+            'foto_hp' => Storage::url($device->foto_hp),
         ]);
     }
 
