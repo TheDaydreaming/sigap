@@ -105,4 +105,20 @@ Route::middleware('guest')->get('/register-first-user-sigap', function () {
     return 'First user created successfully! Email: admin@sigap.id, Password: password123';
 });
 
+Route::get('/debug-storage', function () {
+    return [
+        'FILESYSTEM_DISK' => env('FILESYSTEM_DISK'),
+        'AWS_BUCKET' => env('AWS_BUCKET'),
+        'AWS_DEFAULT_REGION' => env('AWS_DEFAULT_REGION'),
+        'AWS_ENDPOINT' => env('AWS_ENDPOINT'),
+        'AWS_URL' => env('AWS_URL'),
+        'AWS_USE_PATH_STYLE_ENDPOINT' => env('AWS_USE_PATH_STYLE_ENDPOINT'),
+        'has_access_key' => !empty(env('AWS_ACCESS_KEY_ID')),
+        'has_secret_key' => !empty(env('AWS_SECRET_ACCESS_KEY')),
+        'test_url_s3' => Storage::disk('s3')->url('test.jpg'),
+        'test_url_default' => Storage::url('test.jpg'),
+        'resolved_default_disk' => config('filesystems.default'),
+    ];
+});
+
 require __DIR__.'/auth.php';
