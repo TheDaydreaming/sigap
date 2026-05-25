@@ -91,4 +91,18 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware('guest')->get('/register-first-user-sigap', function () {
+    if (\App\Models\User::count() > 0) {
+        return 'Registration is closed: users already exist.';
+    }
+    
+    $user = \App\Models\User::create([
+        'name' => 'Administrator',
+        'email' => 'admin@sigap.id',
+        'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+    ]);
+    
+    return 'First user created successfully! Email: admin@sigap.id, Password: password123';
+});
+
 require __DIR__.'/auth.php';
