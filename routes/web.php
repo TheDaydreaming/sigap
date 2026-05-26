@@ -5,14 +5,6 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\ProfileController;
 
-// Middleware Penjaga khusus Admin
-$adminOnly = function ($request, $next) {
-    if (auth()->check() && auth()->user()->isAdmin()) {
-        return $next($request);
-    }
-    abort(403, 'Akses ditolak: Hanya untuk administrator.');
-};
-
 /*
 |--------------------------------------------------------------------------
 | LANDING
@@ -47,7 +39,7 @@ Route::middleware('auth')->group(function () {
 | KHUSUS ADMINISTRATOR (ADMIN ONLY)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth', $adminOnly])->group(function () {
+Route::middleware(['auth', \App\Http\Middleware\AdminOnly::class])->group(function () {
     // ===== TASK SYSTEM =====
     Route::post('/tasks', [TaskController::class, 'store']);
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
