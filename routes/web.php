@@ -1,9 +1,17 @@
 <?php
-
+ 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\ProfileController;
+
+// Middleware Penjaga khusus Admin
+$adminOnly = function ($request, $next) {
+    if (auth()->check() && auth()->user()->isAdmin()) {
+        return $next($request);
+    }
+    abort(403, 'Akses ditolak: Hanya untuk administrator.');
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -16,26 +24,35 @@ Route::get('/', function () {
 
 /*
 |--------------------------------------------------------------------------
-| DASHBOARD & TASK
+| UMUM & PETUGAS (BUTUH LOGIN SAJA)
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
-
+    // Halaman Dashboard
     Route::get('/dashboard', [TaskController::class, 'index'])
         ->name('dashboard');
 
-    Route::post('/tasks', [TaskController::class, 'store']);
-    Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
+    // Halaman Verifikasi Publik (Hasil Scan QR) - Butuh Login Petugas/Admin
+    Route::get('/devices/public/{device:uuid}', [DeviceController::class, 'publicShow'])
+        ->name('devices.public.show');
+
+    // Profile (Laravel Breeze)
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 /*
 |--------------------------------------------------------------------------
-| DEVICE ROUTES (ADMIN - BUTUH LOGIN)
+| KHUSUS ADMINISTRATOR (ADMIN ONLY)
 |--------------------------------------------------------------------------
 */
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', $adminOnly])->group(function () {
+    // ===== TASK SYSTEM =====
+    Route::post('/tasks', [TaskController::class, 'store']);
+    Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
 
-    // ===== LIST & CREATE =====
+    // ===== DEVICE MANAGEMENT =====
     Route::get('/devices', [DeviceController::class, 'index'])
         ->name('devices.index');
 
@@ -45,19 +62,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/devices', [DeviceController::class, 'store'])
         ->name('devices.store');
 
-    // ===== DATA UNTUK DATATABLES (AJAX) =====
     Route::get('/devices-datatable', [DeviceController::class, 'datatable'])
         ->name('devices.datatable');
 
-    // ===== UPDATE (EDIT DARI MODAL) =====
     Route::put('/devices/{device}', [DeviceController::class, 'update'])
         ->name('devices.update');
 
-    // ===== JSON UNTUK MODAL (DETAIL & EDIT) — pakai UUID =====
     Route::get('/devices/{device:uuid}/json', [DeviceController::class, 'json'])
         ->name('devices.json');
 
-    // ===== QR ROUTES (PAKAI UUID) =====
     Route::get('/devices/qr/download-all', [DeviceController::class, 'downloadAllQr'])
         ->name('devices.qr.download-all');
 
@@ -67,58 +80,50 @@ Route::middleware('auth')->group(function () {
     Route::get('/devices/qr/{device:uuid}', [DeviceController::class, 'qrShow'])
         ->name('devices.qr.show');
 
-    // ===== DELETE (AJAX) =====
     Route::delete('/devices/{id}', [DeviceController::class, 'destroy'])
         ->name('devices.destroy');
 });
 
 /*
 |--------------------------------------------------------------------------
-| DEVICE ROUTE (PUBLIC - HASIL SCAN QR)
+| SETUP AKUN (HANYA AKTIF SAAT BELUM LOGGED IN / TAMPA USER)
 |--------------------------------------------------------------------------
 */
-Route::get('/devices/public/{device:uuid}', [DeviceController::class, 'publicShow'])
-    ->name('devices.public.show');
-
-/*
-|--------------------------------------------------------------------------
-| PROFILE (Laravel Breeze)
-|--------------------------------------------------------------------------
-*/
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
 Route::middleware('guest')->get('/register-first-user-sigap', function () {
-    if (\App\Models\User::count() > 0) {
-        return 'Registration is closed: users already exist.';
+    // Inisialisasi/Update Akun Admin
+    $admin = \App\Models\User::where('email', 'admin@sigap.id')->first();
+    if ($admin) {
+        $admin->update(['role' => 'admin']);
+    } else {
+        $admin = \App\Models\User::create([
+            'name' => 'Administrator',
+            'email' => 'admin@sigap.id',
+            'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+            'role' => 'admin',
+        ]);
     }
     
-    $user = \App\Models\User::create([
-        'name' => 'Administrator',
-        'email' => 'admin@sigap.id',
-        'password' => \Illuminate\Support\Facades\Hash::make('password123'),
-    ]);
+    // Inisialisasi Akun Petugas
+    $petugas = \App\Models\User::where('email', 'petugas@sigap.id')->first();
+    if (!$petugas) {
+        $petugas = \App\Models\User::create([
+            'name' => 'Petugas Lapas',
+            'email' => 'petugas@sigap.id',
+            'password' => \Illuminate\Support\Facades\Hash::make('password123'),
+            'role' => 'petugas',
+        ]);
+    }
     
-    return 'First user created successfully! Email: admin@sigap.id, Password: password123';
+    return 'Accounts initialized successfully!<br>1. Admin: admin@sigap.id (password123)<br>2. Petugas: petugas@sigap.id (password123)';
 });
 
-Route::get('/debug-storage', function () {
-    return [
-        'FILESYSTEM_DISK' => env('FILESYSTEM_DISK'),
-        'AWS_BUCKET' => env('AWS_BUCKET'),
-        'AWS_DEFAULT_REGION' => env('AWS_DEFAULT_REGION'),
-        'AWS_ENDPOINT' => env('AWS_ENDPOINT'),
-        'AWS_URL' => env('AWS_URL'),
-        'AWS_USE_PATH_STYLE_ENDPOINT' => env('AWS_USE_PATH_STYLE_ENDPOINT'),
-        'has_access_key' => !empty(env('AWS_ACCESS_KEY_ID')),
-        'has_secret_key' => !empty(env('AWS_SECRET_ACCESS_KEY')),
-        'test_url_s3' => Storage::disk('s3')->url('test.jpg'),
-        'test_url_default' => Storage::url('test.jpg'),
-        'resolved_default_disk' => config('filesystems.default'),
-    ];
+Route::get('/run-migration-sigap', function () {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        return 'Migration Output:<br><pre>' . \Illuminate\Support\Facades\Artisan::output() . '</pre>';
+    } catch (\Throwable $e) {
+        return 'Migration Failed: ' . $e->getMessage() . '<br><pre>' . $e->getTraceAsString() . '</pre>';
+    }
 });
 
 require __DIR__.'/auth.php';

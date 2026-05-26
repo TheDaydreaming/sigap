@@ -18,6 +18,7 @@
     <div class="py-8 bg-[#E0E2E3] min-h-screen">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-8">
 
+            @if(auth()->user()->isAdmin())
             <!-- HERO KPI UTAMA -->
             <div class="relative overflow-hidden bg-gradient-to-br from-[#07213D] to-[#0A2E52] p-8 rounded-3xl shadow-xl text-[#E0E2E3]">
                 <!-- Background Pattern -->
@@ -198,7 +199,69 @@
                     </div>
                 </div>
             </div>
+            @else
+            <!-- PETUGAS DASHBOARD CONTENT -->
+            <div class="bg-white p-8 rounded-3xl shadow-xl border border-gray-100 space-y-6">
+                <div class="flex items-center gap-4 pb-4 border-b border-gray-100">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#07213D] to-[#0A2E52] flex items-center justify-center text-white shadow-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-[#EEBF63]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-[#07213D]">Mode Scan Petugas Lapas</h3>
+                        <p class="text-sm text-gray-500">Sesi otentikasi aktif untuk verifikasi lapangan.</p>
+                    </div>
+                </div>
 
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Status Sesi -->
+                    <div class="p-6 rounded-2xl bg-green-50 border border-green-100 flex flex-col justify-between">
+                        <div>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-green-200 text-green-800 uppercase tracking-wider mb-3">
+                                <span class="w-2 h-2 rounded-full bg-green-600 animate-pulse"></span>
+                                Sesi Aktif
+                            </span>
+                            <h4 class="text-lg font-bold text-green-900">Perangkat Siap Digunakan</h4>
+                            <p class="text-sm text-green-700 mt-2 leading-relaxed">
+                                Sesi verifikasi Anda sedang berjalan. Anda dapat langsung menggunakan kamera HP/alat pemindai untuk men-scan barcode perangkat pembawa tanpa perlu login ulang sepanjang hari.
+                            </p>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-green-200 text-xs text-green-600 flex justify-between items-center">
+                            <span>Role Akun: <strong>Petugas Lapas</strong></span>
+                            <span>Masa Sesi: <strong>12 Jam (Auto-refresh)</strong></span>
+                        </div>
+                    </div>
+
+                    <!-- Petunjuk Operasional -->
+                    <div class="p-6 rounded-2xl bg-[#07213D]/5 border border-gray-200 space-y-4">
+                        <h4 class="font-bold text-[#07213D] text-base flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#EEBF63]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Panduan Verifikasi Lapangan
+                        </h4>
+                        
+                        <ul class="space-y-3 text-sm text-gray-700">
+                            <li class="flex items-start gap-2.5">
+                                <span class="flex-shrink-0 w-5 h-5 rounded-full bg-[#07213D] text-[#EEBF63] text-xs font-bold flex items-center justify-center mt-0.5">1</span>
+                                <span>Arahkan kamera HP Anda ke stiker **QR Code** yang tertempel pada perangkat target.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="flex-shrink-0 w-5 h-5 rounded-full bg-[#07213D] text-[#EEBF63] text-xs font-bold flex items-center justify-center mt-0.5">2</span>
+                                <span>Klik link/notifikasi pop-up yang muncul di layar HP Anda untuk memuat info aset.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="flex-shrink-0 w-5 h-5 rounded-full bg-[#07213D] text-[#EEBF63] text-xs font-bold flex items-center justify-center mt-0.5">3</span>
+                                <span>Cocokkan **Foto Wajah Pemilik** dan spesifikasi fisik perangkat dengan pemilik asli di tempat.</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="flex-shrink-0 w-5 h-5 rounded-full bg-[#07213D] text-[#EEBF63] text-xs font-bold flex items-center justify-center mt-0.5">4</span>
+                                <span>Secara berkala, lakukan verifikasi hardware dengan menekan **`*#06#`** untuk mencocokkan IMEI HP dengan data di layar.</span>
+                            </li>
+                        </ul>
+                    </div>
+            @endif
         </div>
     </div>
 </x-app-layout>

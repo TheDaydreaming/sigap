@@ -194,11 +194,13 @@
     @php
     $menus = [
         ['url' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6'],
-        ['url' => 'devices/create', 'label' => 'Input Data', 'icon' => 'M12 4v16m8-8H4'],
-        ['url' => 'devices', 'label' => 'List Data', 'icon' => 'M4 6h16M4 12h16M4 18h16'],
-        ['url' => 'devices/qr', 'label' => 'Generate QR', 'icon' => 'M3 7v4h4V7H3zm0 10h4v-4H3v4zM13 7v4h4V7h-4zm0 10h4v-4h-4v4z']
     ];
-@endphp
+    if (auth()->user()->isAdmin()) {
+        $menus[] = ['url' => 'devices/create', 'label' => 'Input Data', 'icon' => 'M12 4v16m8-8H4'];
+        $menus[] = ['url' => 'devices', 'label' => 'List Data', 'icon' => 'M4 6h16M4 12h16M4 18h16'];
+        $menus[] = ['url' => 'devices/qr', 'label' => 'Generate QR', 'icon' => 'M3 7v4h4V7H3zm0 10h4v-4H3v4zM13 7v4h4V7h-4zm0 10h4v-4h-4v4z'];
+    }
+    @endphp
 
 @foreach ($menus as $menu)
 @php
