@@ -81,7 +81,7 @@ Route::middleware(['auth', \App\Http\Middleware\AdminOnly::class])->group(functi
 | SETUP AKUN (HANYA AKTIF SAAT BELUM LOGGED IN / TAMPA USER)
 |--------------------------------------------------------------------------
 */
-Route::middleware('guest')->get('/register-first-user-sigap', function () {
+Route::get('/register-first-user-sigap', function () {
     // Inisialisasi/Update Akun Admin
     $admin = \App\Models\User::where('email', 'admin@sigap.id')->first();
     if ($admin) {
