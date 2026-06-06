@@ -315,9 +315,17 @@ document.addEventListener("DOMContentLoaded", function() {
         "imei2"
     ];
 
-    // ✅ VALIDASI VISUAL (HIJAU = VALID)
+    // Status kompresi gambar
+    const isCompressing = {
+        foto_pemilik: false,
+        foto_hp: false
+    };
+
+    // ✅ VALIDASI VISUAL UNTUK FIELD INPUT TEKS (HIJAU = VALID)
     fields.concat(optionalFields).forEach(id => {
+        if (id === "foto_pemilik" || id === "foto_hp") return;
         const input = document.getElementById(id);
+        if (!input) return;
 
         input.addEventListener("input", function() {
             if (this.value) {
@@ -334,35 +342,179 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-let alertTimeout;
+    // ✅ FUNGSI KOMPRESI GAMBAR CLIENT-SIDE
+    function compressImage(file, callback) {
+        // Jika file berukuran sangat kecil (di bawah 200 KB), langsung kirim tanpa kompresi
+        if (file.size < 200 * 1024) {
+            callback(file);
+            return;
+        }
 
-function showValidationAlert() {
-    const alertBox = document.getElementById("validationAlert");
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function(event) {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = function() {
+                const canvas = document.createElement("canvas");
+                let width = img.width;
+                let height = img.height;
+                const maxDimension = 1200; // Resolusi maksimum (lebar atau tinggi)
 
-    alertBox.classList.remove("hidden");
-    alertBox.classList.add("shake-soft", "opacity-100");
+                if (width > maxDimension || height > maxDimension) {
+                    if (width > height) {
+                        height = Math.round((height * maxDimension) / width);
+                        width = maxDimension;
+                    } else {
+                        width = Math.round((width * maxDimension) / height);
+                        height = maxDimension;
+                    }
+                }
 
-    // Hapus class shake setelah selesai animasi
-    setTimeout(() => {
-        alertBox.classList.remove("shake-soft");
-    }, 400);
+                canvas.width = width;
+                canvas.height = height;
 
-    // Auto hide setelah 5 detik
-    clearTimeout(alertTimeout);
-    alertTimeout = setTimeout(() => {
-        closeValidationAlert();
-    }, 5000);
-}
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, width, height);
 
-window.closeValidationAlert = function() {
-    const alertBox = document.getElementById("validationAlert");
-    alertBox.classList.add("hidden");
-}
+                // Ekspor ke JPEG dengan kualitas 75% demi efisiensi ukuran berkas
+                canvas.toBlob(function(blob) {
+                    if (!blob) {
+                        callback(file);
+                        return;
+                    }
+                    
+                    // Gunakan nama asli dengan akhiran _compressed.jpg
+                    let name = file.name;
+                    const lastDot = name.lastIndexOf(".");
+                    if (lastDot !== -1) {
+                        name = name.substring(0, lastDot);
+                    }
+                    
+                    const compressedFile = new File([blob], `${name}_compressed.jpg`, {
+                        type: "image/jpeg",
+                        lastModified: Date.now()
+                    });
+                    
+                    callback(compressedFile);
+                }, "image/jpeg", 0.75);
+            };
+            img.onerror = function() {
+                callback(file);
+            };
+        };
+        reader.onerror = function() {
+            callback(file);
+        };
+    }
+
+    // ✅ PENANGAN PERUBAHAN INPUT FILE (KOMPRESI LANGSUNG SAAT DIPILIH)
+    function handleFileChange(inputId, helperId) {
+        const input = document.getElementById(inputId);
+        const helper = document.getElementById(helperId);
+        if (!input || !helper) return;
+
+        input.addEventListener("change", function() {
+            const file = this.files[0];
+            if (!file) {
+                helper.classList.add("hidden");
+                input.classList.remove("border-green-600", "border-red-600");
+                return;
+            }
+
+            // Validasi tipe file
+            if (!file.type.startsWith("image/")) {
+                helper.innerHTML = "✕ File harus berupa gambar";
+                helper.classList.remove("hidden", "text-green-600");
+                helper.classList.add("text-red-600");
+                input.classList.add("border-red-600");
+                input.classList.remove("border-green-600");
+                input.value = "";
+                return;
+            }
+
+            // Mulai kompresi
+            isCompressing[inputId] = true;
+            helper.innerHTML = `
+                <span class="flex items-center gap-1.5 text-blue-600 animate-pulse text-xs font-semibold">
+                    <svg class="animate-spin h-3.5 w-3.5 text-blue-600" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                    </svg>
+                    Mengompresi gambar...
+                </span>
+            `;
+            helper.classList.remove("hidden");
+            confirmBtn.disabled = true;
+            confirmBtn.style.opacity = "0.6";
+            confirmBtn.style.cursor = "not-allowed";
+
+            compressImage(file, function(compressedFile) {
+                // Masukkan file hasil kompresi ke input files
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(compressedFile);
+                input.files = dataTransfer.files;
+
+                // Hitung ukuran data untuk diinfokan ke pengguna
+                const originalSize = (file.size / 1024).toFixed(1);
+                const compressedSize = (compressedFile.size / 1024).toFixed(1);
+
+                helper.innerHTML = `✓ Berhasil dikompresi: <b>${compressedSize} KB</b> <span class="text-gray-500 font-normal">(dari ${originalSize} KB)</span>`;
+                helper.classList.remove("hidden", "text-red-600");
+                helper.classList.add("text-green-600");
+
+                input.classList.add("border-green-600");
+                input.classList.remove("border-red-600");
+
+                isCompressing[inputId] = false;
+
+                // Aktifkan kembali tombol simpan jika semua selesai kompresi
+                if (!isCompressing.foto_pemilik && !isCompressing.foto_hp) {
+                    confirmBtn.disabled = false;
+                    confirmBtn.style.opacity = "1";
+                    confirmBtn.style.cursor = "pointer";
+                }
+            });
+        });
+    }
+
+    handleFileChange("foto_pemilik", "fotoPemilikValid");
+    handleFileChange("foto_hp", "fotoHpValid");
+
+    let alertTimeout;
+
+    function showValidationAlert() {
+        const alertBox = document.getElementById("validationAlert");
+
+        alertBox.classList.remove("hidden");
+        alertBox.classList.add("shake-soft", "opacity-100");
+
+        // Hapus class shake setelah selesai animasi
+        setTimeout(() => {
+            alertBox.classList.remove("shake-soft");
+        }, 400);
+
+        // Auto hide setelah 5 detik
+        clearTimeout(alertTimeout);
+        alertTimeout = setTimeout(() => {
+            closeValidationAlert();
+        }, 5000);
+    }
+
+    window.closeValidationAlert = function() {
+        const alertBox = document.getElementById("validationAlert");
+        alertBox.classList.add("hidden");
+    }
 
 
     // ✅ TOMBOL SIMPAN -> TAMPILKAN MODAL KONFIRMASI
     confirmBtn.addEventListener("click", function(e) {
         e.preventDefault();
+
+        if (isCompressing.foto_pemilik || isCompressing.foto_hp) {
+            alert("Gambar sedang dikompresi. Silakan tunggu sebentar.");
+            return;
+        }
 
         let valid = true;
 
@@ -373,7 +525,7 @@ window.closeValidationAlert = function() {
         });
 
         if (!valid) {
-showValidationAlert();
+            showValidationAlert();
             return;
         }
 
