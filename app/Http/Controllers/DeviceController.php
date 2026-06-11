@@ -149,15 +149,49 @@ class DeviceController extends Controller
             'imei2' => 'nullable|string|max:255|unique:devices,imei2,' . $device->id,
             'merek_hp' => 'required|string|max:255',
             'warna_hp' => 'required|string|max:100',
+            'foto_pemilik' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
+            'foto_hp' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
         ]);
 
-        $device->update($request->only([
+        $disk = env('FILESYSTEM_DISK', 'public');
+
+        $updateData = $request->only([
             'nama_pemilik',
             'imei',
             'imei2',
             'merek_hp',
             'warna_hp'
-        ]));
+        ]);
+
+        // Jika ada upload foto pemilik baru
+        if ($request->hasFile('foto_pemilik')) {
+            // Hapus foto pemilik lama
+            if ($device->foto_pemilik) {
+                Storage::disk($disk)->delete($device->foto_pemilik);
+            }
+            // Simpan foto pemilik baru
+            $fotoPemilik = $request->file('foto_pemilik')->store('pemilik', $disk);
+            if ($disk === 'public') {
+                Storage::disk('public')->setVisibility($fotoPemilik, 'public');
+            }
+            $updateData['foto_pemilik'] = $fotoPemilik;
+        }
+
+        // Jika ada upload foto HP baru
+        if ($request->hasFile('foto_hp')) {
+            // Hapus foto HP lama
+            if ($device->foto_hp) {
+                Storage::disk($disk)->delete($device->foto_hp);
+            }
+            // Simpan foto HP baru
+            $fotoHp = $request->file('foto_hp')->store('hp', $disk);
+            if ($disk === 'public') {
+                Storage::disk('public')->setVisibility($fotoHp, 'public');
+            }
+            $updateData['foto_hp'] = $fotoHp;
+        }
+
+        $device->update($updateData);
 
         return response()->json([
             'message' => 'Data berhasil diperbarui'

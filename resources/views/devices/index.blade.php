@@ -351,7 +351,7 @@
         </button>
     </div>
 
-    <form id="editForm" method="POST" class="space-y-4">
+    <form id="editForm" method="POST" enctype="multipart/form-data" class="space-y-4">
         @csrf
         @method('PUT')
 
@@ -394,6 +394,20 @@
                 <input id="e_warna" name="warna_hp" type="text"
                        class="w-full rounded-xl border-gray-300 focus:border-[#EEBF63] focus:ring focus:ring-[#EEBF63]/20 transition shadow-sm"
                        placeholder="Contoh: Hitam, Biru...">
+            </div>
+
+            <!-- FOTO PEMILIK -->
+            <div>
+                <label for="e_foto_pemilik" class="block text-sm font-semibold text-[#07213D] mb-1">Foto Pemilik (Baru)</label>
+                <input id="e_foto_pemilik" name="foto_pemilik" type="file" accept="image/*"
+                       class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-gray-100 file:text-[#07213D] hover:file:bg-gray-200 cursor-pointer">
+            </div>
+
+            <!-- FOTO HP -->
+            <div>
+                <label for="e_foto_hp" class="block text-sm font-semibold text-[#07213D] mb-1">Foto HP (Baru)</label>
+                <input id="e_foto_hp" name="foto_hp" type="file" accept="image/*"
+                       class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-gray-100 file:text-[#07213D] hover:file:bg-gray-200 cursor-pointer">
             </div>
         </div>
 
@@ -507,7 +521,10 @@ function openEditModal(uuid) {
             document.getElementById("e_imei2").value = d.imei2 || '';
             document.getElementById("e_merek").value = d.merek_hp;
             document.getElementById("e_warna").value = d.warna_hp;
-
+            
+            // Reset input file biar kosong setiap kali modal dibuka
+            document.getElementById("e_foto_pemilik").value = "";
+            document.getElementById("e_foto_hp").value = "";
 
             document.getElementById("editForm").action = `/devices/${d.id}`;
             showModal("editModal");
